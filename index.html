@@ -7,10 +7,9 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="light-mode">
-
-    <div class="background-overlay"></div> <header>
+    <div class="bg-overlay"></div> <header>
         <div class="container">
-            <h1 class="main-title">Mingbuloq ixtisoslashtirilgan maktabi o‘quvchilari uchun ijaralar ro‘yhati</h1>
+            <h1 class="main-title">Mingbuloq ixtisoslashtirilgan maktabi o‘quvchilari uchun ijaralar ro‘yxati</h1>
             <div class="nav-controls">
                 <button id="theme-toggle" class="btn-tool">🌙 Tungi Rejim</button>
                 <button id="admin-btn" class="btn-tool">🔑 Admin Panel</button>
@@ -47,19 +46,18 @@
                 <div class="admin-form">
                     <input type="hidden" id="edit-index">
                     <input type="text" id="post-title" placeholder="Sarlavha">
-                    <textarea id="post-desc" placeholder="Tavsif..." rows="3"></textarea>
+                    <textarea id="post-desc" placeholder="Uy haqida ma'lumot..." rows="3"></textarea>
                     <input type="text" id="post-map" placeholder="Google Maps Linki">
                     <button onclick="savePost()" class="btn-action" id="save-btn">Saqlash</button>
                     <button onclick="clearForm()" class="btn-secondary">Tozalash</button>
                 </div>
                 <hr>
-                <h4>Boshqarish</h4>
+                <h4>E'lonlarni Boshqarish</h4>
                 <div id="admin-post-list"></div>
                 <hr>
-                <h4>Sozlamalar</h4>
                 <input type="text" id="new-login" placeholder="Yangi login">
                 <input type="password" id="new-pass" placeholder="Yangi parol">
-                <button onclick="updateAdmin()" class="btn-save">Yangilash</button>
+                <button onclick="updateAdmin()" class="btn-save">Adminni Yangilash</button>
                 <button onclick="logout()" class="btn-exit">Chiqish</button>
             </div>
         </div>
