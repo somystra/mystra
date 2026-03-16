@@ -1,65 +1,64 @@
 :root {
     --primary: #4b0082;
     --secondary: #0000ff;
-    --bg-color: rgba(244, 247, 246, 0.9);
+    --bg-overlay: rgba(244, 247, 246, 0.85);
     --text: #333;
     --card-bg: rgba(255, 255, 255, 0.95);
 }
 
 body.dark-mode {
-    --bg-color: rgba(18, 18, 18, 0.9);
+    --bg-overlay: rgba(15, 15, 26, 0.9);
     --text: #f1f1f1;
-    --card-bg: rgba(30, 30, 30, 0.95);
+    --card-bg: rgba(26, 26, 46, 0.95);
 }
 
 body {
     margin: 0;
     font-family: 'Segoe UI', sans-serif;
     color: var(--text);
-    /* Fon rasmi shu yerga qo'yiladi */
-    background: url('https://github.com/somystra/mystra/blob/main/background.jpg?raw=true') no-repeat center center fixed;
+    background: url('background.jpg') no-repeat center center fixed;
     background-size: cover;
+    transition: 0.3s;
 }
 
-/* Rasm ustidan xira qatlam */
 .bg-overlay {
     position: fixed;
     top: 0; left: 0; width: 100%; height: 100%;
-    background-color: var(--bg-color);
+    background-color: var(--bg-overlay);
     z-index: -1;
-    transition: 0.3s;
 }
 
 .container { width: 90%; max-width: 1100px; margin: auto; }
 
 header {
-    background: linear-gradient(135deg, rgba(0,0,255,0.8), rgba(75,0,130,0.8));
+    background: linear-gradient(135deg, rgba(0,0,255,0.7), rgba(75,0,130,0.7));
     color: white;
     padding: 40px 0;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    backdrop-filter: blur(5px);
 }
 
-.main-title { font-size: 1.8em; margin-bottom: 20px; padding: 0 10px; }
+.main-title { font-size: 1.6em; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.3); }
 
 .btn-tool {
     background: rgba(255,255,255,0.2);
     border: 1px solid white;
     color: white;
-    padding: 8px 16px;
+    padding: 8px 15px;
     border-radius: 20px;
     cursor: pointer;
+    margin: 5px;
 }
 
 .btn-give-rent {
     display: inline-block;
-    margin-top: 20px;
-    background: #ffffff;
-    color: #4b0082;
+    background: white;
+    color: var(--primary);
     padding: 12px 25px;
     text-decoration: none;
     border-radius: 30px;
     font-weight: bold;
+    margin-top: 15px;
     box-shadow: 0 4px 15px rgba(0,0,0,0.2);
 }
 
@@ -67,24 +66,34 @@ header {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 25px;
-    margin: 40px 0;
+    padding: 40px 0;
 }
 
 .card {
     background: var(--card-bg);
     padding: 20px;
     border-radius: 15px;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
-    border-left: 6px solid var(--secondary);
+    box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+    border-top: 5px solid var(--secondary);
+}
+
+.card-img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    background: #ddd;
 }
 
 .btn-action {
     background: linear-gradient(90deg, var(--secondary), var(--primary));
     color: white;
-    padding: 10px 15px;
+    padding: 10px 20px;
     border: none;
     border-radius: 8px;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .modal {
@@ -98,12 +107,12 @@ header {
 }
 
 .modal-content { background: var(--card-bg); padding: 30px; border-radius: 15px; width: 320px; }
-.admin-wide { width: 90%; max-width: 500px; max-height: 80vh; overflow-y: auto; }
+.admin-wide { width: 90%; max-width: 500px; max-height: 85vh; overflow-y: auto; text-align: left; }
 
 input, textarea { width: 93%; padding: 10px; margin-bottom: 10px; border-radius: 8px; border: 1px solid #ccc; }
 
-footer { background: rgba(0,0,0,0.85); color: #ccc; text-align: center; padding: 40px 0; }
-.creators { margin: 15px 0; font-size: 0.9em; color: #aaa; }
-.btn-save { background: #27ae60; color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; margin-top: 5px; cursor: pointer;}
-.btn-exit { background: #c0392b; color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; margin-top: 5px; cursor: pointer;}
-.btn-secondary { background: none; border: none; color: gray; cursor: pointer; margin-top: 10px; }
+footer { background: rgba(0,0,0,0.8); color: #ccc; text-align: center; padding: 40px 0; margin-top: 50px; }
+.creators { margin: 20px 0; font-size: 0.9em; line-height: 1.6; }
+.btn-save { background: #27ae60; color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 5px;}
+.btn-exit { background: #c0392b; color: white; border: none; padding: 10px; width: 100%; border-radius: 8px; cursor: pointer; margin-top: 5px;}
+.btn-secondary { background: none; border: none; color: gray; cursor: pointer; }
