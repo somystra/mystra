@@ -22,23 +22,22 @@ body { font-family: 'Poppins', sans-serif; background-color: var(--dark); color:
 .nav-content { display: flex; justify-content: space-between; align-items: center; }
 .logo { font-size: 24px; font-weight: 700; }
 .logo span { color: var(--primary); }
-.nav-icon { background: var(--glass); border: 1px solid var(--glass-border); color: white; padding: 10px 15px; border-radius: 12px; cursor: pointer; transition: 0.3s; }
+.nav-icon { background: var(--glass); border: 1px solid var(--glass-border); color: white; padding: 10px 15px; border-radius: 12px; cursor: pointer; }
 
 .hero { height: 60vh; display: flex; align-items: center; text-align: center; }
-.hero h1 { font-size: 3rem; line-height: 1.2; }
+.hero h1 { font-size: 3.2rem; line-height: 1.2; }
 .hero h1 span { background: linear-gradient(90deg, var(--primary), var(--secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
 
-.btn-primary { background: var(--primary); color: white; padding: 12px 30px; border-radius: 30px; border: none; cursor: pointer; transition: 0.3s; text-decoration: none; display: inline-block; }
+.btn-primary { background: var(--primary); color: white; padding: 12px 30px; border-radius: 30px; border: none; cursor: pointer; transition: 0.3s; text-decoration: none; }
 .btn-primary:hover { box-shadow: 0 0 20px var(--primary); transform: translateY(-3px); }
-.btn-secondary { border: 1px solid white; color: white; padding: 11px 29px; border-radius: 30px; text-decoration: none; margin-left: 10px; }
 
 .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; padding: 50px 0; }
 .card { background: var(--glass); backdrop-filter: blur(10px); border: 1px solid var(--glass-border); border-radius: 20px; padding: 15px; transition: 0.3s; }
-.card:hover { transform: translateY(-10px); border-color: var(--primary); }
 .card-img { width: 100%; height: 200px; border-radius: 15px; object-fit: cover; }
 
-.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); justify-content: center; align-items: center; z-index: 1000; }
+.modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); justify-content: center; align-items: center; z-index: 1000; }
 .glass { background: #1e293b; border: 1px solid var(--glass-border); padding: 30px; border-radius: 20px; width: 90%; max-width: 450px; text-align: center; }
 input, textarea { width: 100%; padding: 12px; margin: 10px 0; background: rgba(255,255,255,0.05); border: 1px solid var(--glass-border); border-radius: 10px; color: white; }
-.btn-danger { background: #ef4444; color: white; border: none; padding: 12px; border-radius: 10px; width: 100%; cursor: pointer; margin-top: 20px; }
-.btn-link { background: none; border: none; color: #999; cursor: pointer; margin-top: 15px; }
+
+footer { padding: 40px 0; text-align: center; border-top: 1px solid var(--glass-border); margin-top: 50px; }
+.creators span { color: var(--secondary); font-weight: bold; }
