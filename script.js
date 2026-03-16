@@ -8,30 +8,42 @@ const firebaseConfig = {
     appId: "1:1057060835809:web:c267dc2666ce262d45c2a0"
 };
 
-// Firebase-ni ishga tushirish
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
-
-// Admin login ma'lumotlari
 const adminAuth = { user: "mystra", pass: "mystra2014" };
 
-// Tungi rejim
-document.getElementById('theme-toggle').onclick = () => {
-    document.body.classList.toggle('dark-mode');
-    document.getElementById('theme-toggle').innerText = document.body.classList.contains('dark-mode') ? "☀️ Kungi Rejim" : "🌙 Tungi Rejim";
-};
-
-// Rasmni Base64 formatga o'tkazish
-async function getBase64(file) {
-    return new Promise((resolve, reject) => {
+// --- YANGI: Rasmni kichraytirish funksiyasi ---
+async function resizeImage(file) {
+    return new Promise((resolve) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = () => resolve(reader.result);
-        reader.onerror = error => reject(error);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const MAX_WIDTH = 800; // Rasmni kengligini 800px ga tushiramiz
+                let width = img.width;
+                let height = img.height;
+
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, width, height);
+                
+                // Sifatni 0.7 (70%) qilib saqlaymiz, bu hajmni keskin kamaytiradi
+                resolve(canvas.toDataURL('image/jpeg', 0.7));
+            };
+        };
     });
 }
 
-// Bazadan ma'lumotlarni real-time o'qib olish
+// Bazadan ma'lumotlarni o'qish
 function renderAll() {
     const grid = document.getElementById('main-grid');
     db.collection("posts").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
@@ -47,8 +59,7 @@ function renderAll() {
                         <a href="https://t.me/mingbulak_im_bot" class="btn-action">Murojaat</a>
                         ${p.map ? `<a href="${p.map}" target="_blank" class="btn-action" style="background:#27ae60;">Xarita</a>` : ''}
                     </div>
-                </div>
-            `;
+                </div>`;
         });
         renderAdminList(snapshot);
     });
@@ -66,7 +77,8 @@ async function savePost() {
 
     let imgData = "";
     if (imgFile) {
-        imgData = await getBase64(imgFile);
+        // Avvalgidan farqli ravishda endi resizeImage funksiyasini chaqiramiz
+        imgData = await resizeImage(imgFile);
     }
 
     const postData = {
@@ -85,21 +97,26 @@ async function savePost() {
             await db.collection("posts").doc(editId).update(postData);
         }
         clearForm();
-        alert("Saqlandi!");
+        alert("Muvaffaqiyatli saqlandi!");
     } catch (e) {
-        console.error(e);
-        alert("Xatolik: Ehtimol rasm hajmi juda kattadir.");
+        console.error("Xatolik tafsiloti:", e);
+        alert("Xatolik yuz berdi. Iltimos, boshqa rasm tanlang yoki bazani tekshiring.");
     }
 }
 
-// Admin Panel Funksiyalari
+// --- Admin Panel va Tungi rejim funksiyalari (o'zgarishsiz qoladi) ---
+document.getElementById('theme-toggle').onclick = () => {
+    document.body.classList.toggle('dark-mode');
+    document.getElementById('theme-toggle').innerText = document.body.classList.contains('dark-mode') ? "☀️ Kungi Rejim" : "🌙 Tungi Rejim";
+};
+
 function checkAdmin() {
     const u = document.getElementById('login').value;
     const p = document.getElementById('password').value;
     if(u === adminAuth.user && p === adminAuth.pass) {
         document.getElementById('login-modal').style.display = 'none';
         document.getElementById('admin-panel').style.display = 'flex';
-    } else { alert("Xato!"); }
+    } else { alert("Login yoki parol xato!"); }
 }
 
 function renderAdminList(snapshot) {
@@ -111,11 +128,10 @@ function renderAdminList(snapshot) {
             <div style="display:flex; justify-content:space-between; padding:10px; background:rgba(0,0,0,0.05); margin-bottom:5px; border-radius:8px;">
                 <span>${p.title}</span>
                 <div>
-                    <button onclick="editPost('${doc.id}')" style="color:orange; border:none; background:none; cursor:pointer;">✎</button>
-                    <button onclick="deletePost('${doc.id}')" style="color:red; border:none; background:none; cursor:pointer;">✖</button>
+                    <button onclick="editPost('${doc.id}')" style="color:orange; border:none; background:none; cursor:pointer; font-size:1.2em;">✎</button>
+                    <button onclick="deletePost('${doc.id}')" style="color:red; border:none; background:none; cursor:pointer; font-size:1.2em;">✖</button>
                 </div>
-            </div>
-        `;
+            </div>`;
     });
 }
 
@@ -143,7 +159,6 @@ function clearForm() {
     document.getElementById('post-image').value = "";
     document.getElementById('edit-id').value = "";
     document.getElementById('form-title').innerText = "Yangi E'lon Qo'shish";
-    document.getElementById('save-btn').innerText = "Saqlash";
 }
 
 document.getElementById('admin-btn').onclick = () => document.getElementById('login-modal').style.display = 'flex';
