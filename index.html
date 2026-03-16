@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Maktab Ijara Tizimi</title>
+    <title>Maktab Ijara Tizimi | NetGlobal</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body class="light-mode">
+
     <header>
         <div class="container">
             <h1>Maktab Ijara</h1>
@@ -19,15 +20,9 @@
 
     <main class="container">
         <section id="announcements">
-            <h2>Mavjud Ijaralar</h2>
-            <div class="card-grid">
-                <div class="card">
-                    <img src="https://via.placeholder.com/300x200" alt="Uy rasmi">
-                    <h3>2 xonali hovli</h3>
-                    <p>Maktabga 200 metr masofada. Hamma sharoitlar bor.</p>
-                    <a href="https://t.me/mingbulak_im_bot" class="btn-primary">Ijaraga murojaat</a>
+            <h2 style="margin-top: 20px;">Mavjud Ijaralar</h2>
+            <div class="card-grid" id="main-grid">
                 </div>
-            </div>
         </section>
 
         <div id="login-modal" class="modal">
@@ -35,35 +30,43 @@
                 <h3>Admin Kirish</h3>
                 <input type="text" id="login" placeholder="Login">
                 <input type="password" id="password" placeholder="Parol">
-                <button onclick="checkAdmin()">Kirish</button>
-                <button onclick="closeModal()">Yopish</button>
+                <button onclick="checkAdmin()" class="btn-primary" style="width: 100%; border: none;">Kirish</button>
+                <button onclick="closeModal()" class="btn-text">Yopish</button>
             </div>
         </div>
 
-        <div id="admin-panel" class="modal" style="display:none;">
-            <div class="modal-content admin-box">
-                <h3>Admin Menyu</h3>
-                <div class="admin-actions">
-                    <h4>Yangi E'lon Berish</h4>
-                    <input type="text" placeholder="Sarlavha">
-                    <textarea placeholder="Tavsif"></textarea>
-                    <input type="text" placeholder="Google Maps Linki">
-                    <button class="btn-save">E'lonni Joylash</button>
-                    <hr>
-                    <h4>Sozlamalar</h4>
-                    <input type="text" id="new-login" placeholder="Yangi login">
-                    <input type="password" id="new-pass" placeholder="Yangi parol">
-                    <button class="btn-save">Ma'lumotlarni Yangilash</button>
-                    <button onclick="logout()" class="btn-exit">Chiqish</button>
+        <div id="admin-panel" class="modal">
+            <div class="modal-content admin-wide">
+                <h3 id="form-title">Yangi E'lon Qo'shish</h3>
+                <div class="admin-form">
+                    <input type="hidden" id="edit-index">
+                    <input type="text" id="post-title" placeholder="Sarlavha (masalan: 2 xonali hovli)">
+                    <textarea id="post-desc" placeholder="Uy haqida batafsil ma'lumot..." rows="3"></textarea>
+                    <input type="text" id="post-map" placeholder="Google Maps Linki">
+                    <button onclick="savePost()" class="btn-primary" id="save-btn" style="width: 100%; border: none;">Saqlash</button>
                 </div>
+
+                <hr>
+                <h4>E'lonlar Ro'yxati</h4>
+                <div id="admin-post-list"></div>
+
+                <hr>
+                <h4>Profilni Yangilash</h4>
+                <input type="text" id="new-login" placeholder="Yangi login">
+                <input type="password" id="new-pass" placeholder="Yangi parol">
+                <button onclick="updateAdmin()" class="btn-save">Yangilash</button>
+                <button onclick="logout()" class="btn-exit">Chiqish</button>
             </div>
         </div>
     </main>
 
     <footer>
         <div class="container">
-            <p>Bot bilan muammo bo'lsa: <a href="https://t.me/compheonix">@compheonix</a> kanaliga ulaning.</p>
-            <p><strong>Creators:</strong> Solijon, Muhammadkarimov, Ulug'bek Shuxratullayev, Dilmurod Abduvaxobov</p>
+            <p>Bot bilan muammo bo'lsa: <a href="https://t.me/compheonix" target="_blank">@compheonix</a></p>
+            <div class="creators">
+                <strong>Creators:</strong><br>
+                Solijon • Muhammadkarimov • Ulug'bek Shuxratullayev • Dilmurod Abduvaxobov
+            </div>
             <p class="powered">Powered by NetGlobal</p>
         </div>
     </footer>
