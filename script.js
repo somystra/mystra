@@ -1,5 +1,19 @@
-let posts = JSON.parse(localStorage.getItem('housing_data_v2')) || [];
-let admin = JSON.parse(localStorage.getItem('admin_data_v2')) || { user: "mystra", pass: "mystra2014" };
+// 1. Firebase Konfiguratsiyasi
+const firebaseConfig = {
+    apiKey: "AIzaSyCrJYqb9ClyUygAfJPoTqXmq5w2TGAvAkY",
+    authDomain: "mingbulak-ijara-32bea.firebaseapp.com",
+    projectId: "mingbulak-ijara-32bea",
+    storageBucket: "mingbulak-ijara-32bea.firebasestorage.app",
+    messagingSenderId: "1057060835809",
+    appId: "1:1057060835809:web:c267dc2666ce262d45c2a0"
+};
+
+// Firebase-ni ishga tushirish
+firebase.initializeApp(firebaseConfig);
+const db = firebase.firestore();
+
+// Admin login ma'lumotlari
+const adminAuth = { user: "mystra", pass: "mystra2014" };
 
 // Tungi rejim
 document.getElementById('theme-toggle').onclick = () => {
@@ -7,7 +21,7 @@ document.getElementById('theme-toggle').onclick = () => {
     document.getElementById('theme-toggle').innerText = document.body.classList.contains('dark-mode') ? "☀️ Kungi Rejim" : "🌙 Tungi Rejim";
 };
 
-// Rasmni Base64 ga o'tkazish
+// Rasmni Base64 formatga o'tkazish
 async function getBase64(file) {
     return new Promise((resolve, reject) => {
         const reader = new FileReader();
@@ -17,15 +31,27 @@ async function getBase64(file) {
     });
 }
 
-// Admin Kirish
-function checkAdmin() {
-    const u = document.getElementById('login').value;
-    const p = document.getElementById('password').value;
-    if(u === admin.user && p === admin.pass) {
-        document.getElementById('login-modal').style.display = 'none';
-        document.getElementById('admin-panel').style.display = 'flex';
-        renderAdminList();
-    } else { alert("Login yoki parol xato!"); }
+// Bazadan ma'lumotlarni real-time o'qib olish
+function renderAll() {
+    const grid = document.getElementById('main-grid');
+    db.collection("posts").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
+        grid.innerHTML = "";
+        snapshot.forEach((doc) => {
+            const p = doc.data();
+            grid.innerHTML += `
+                <div class="card">
+                    ${p.image ? `<img src="${p.image}" class="card-img">` : `<div class="card-img" style="display:flex;align-items:center;justify-content:center;background:#eee;color:#999;">Rasm yo'q</div>`}
+                    <h3>${p.title}</h3>
+                    <p>${p.desc}</p>
+                    <div style="margin-top:15px; display:flex; gap:10px;">
+                        <a href="https://t.me/mingbulak_im_bot" class="btn-action">Murojaat</a>
+                        ${p.map ? `<a href="${p.map}" target="_blank" class="btn-action" style="background:#27ae60;">Xarita</a>` : ''}
+                    </div>
+                </div>
+            `;
+        });
+        renderAdminList(snapshot);
+    });
 }
 
 // E'lon saqlash
@@ -34,81 +60,80 @@ async function savePost() {
     const desc = document.getElementById('post-desc').value;
     const map = document.getElementById('post-map').value;
     const imgFile = document.getElementById('post-image').files[0];
-    const editIndex = document.getElementById('edit-index').value;
+    const editId = document.getElementById('edit-id').value;
 
-    if(!title || !desc) return alert("Ma'lumotlarni to'ldiring!");
+    if(!title || !desc) return alert("Sarlavha va tavsifni to'ldiring!");
 
     let imgData = "";
     if (imgFile) {
         imgData = await getBase64(imgFile);
-    } else if (editIndex !== "") {
-        imgData = posts[editIndex].image;
     }
 
-    const data = { title, desc, map, image: imgData };
-    
-    if(editIndex === "") posts.push(data);
-    else posts[editIndex] = data;
+    const postData = {
+        title,
+        desc,
+        map,
+        createdAt: new Date()
+    };
 
-    localStorage.setItem('housing_data_v2', JSON.stringify(posts));
-    clearForm();
-    renderAll();
+    if (imgData) postData.image = imgData;
+
+    try {
+        if(editId === "") {
+            await db.collection("posts").add(postData);
+        } else {
+            await db.collection("posts").doc(editId).update(postData);
+        }
+        clearForm();
+        alert("Saqlandi!");
+    } catch (e) {
+        console.error(e);
+        alert("Xatolik: Ehtimol rasm hajmi juda kattadir.");
+    }
 }
 
-function renderAll() {
-    const grid = document.getElementById('main-grid');
-    grid.innerHTML = posts.map(p => `
-        <div class="card">
-            ${p.image ? `<img src="${p.image}" class="card-img">` : `<div class="card-img" style="display:flex;align-items:center;justify-content:center;background:#eee;color:#999;">Rasm yuklanmagan</div>`}
-            <h3>${p.title}</h3>
-            <p>${p.desc}</p>
-            <div style="margin-top:15px; display:flex; gap:10px;">
-                <a href="https://t.me/mingbulak_im_bot" class="btn-action">Murojaat</a>
-                ${p.map ? `<a href="${p.map}" target="_blank" class="btn-action" style="background:#27ae60;">Xarita</a>` : ''}
-            </div>
-        </div>
-    `).join('');
-    renderAdminList();
+// Admin Panel Funksiyalari
+function checkAdmin() {
+    const u = document.getElementById('login').value;
+    const p = document.getElementById('password').value;
+    if(u === adminAuth.user && p === adminAuth.pass) {
+        document.getElementById('login-modal').style.display = 'none';
+        document.getElementById('admin-panel').style.display = 'flex';
+    } else { alert("Xato!"); }
 }
 
-function renderAdminList() {
+function renderAdminList(snapshot) {
     const list = document.getElementById('admin-post-list');
-    list.innerHTML = posts.map((p, i) => `
-        <div class="admin-item" style="display:flex; justify-content:space-between; padding:10px; background:rgba(0,0,0,0.05); margin-bottom:5px; border-radius:8px;">
-            <span>${p.title}</span>
-            <div>
-                <button onclick="editPost(${i})" style="color:orange; border:none; background:none; cursor:pointer; font-size:1.2em;">✎</button>
-                <button onclick="deletePost(${i})" style="color:red; border:none; background:none; cursor:pointer; font-size:1.2em;">✖</button>
+    list.innerHTML = "";
+    snapshot.forEach((doc) => {
+        const p = doc.data();
+        list.innerHTML += `
+            <div style="display:flex; justify-content:space-between; padding:10px; background:rgba(0,0,0,0.05); margin-bottom:5px; border-radius:8px;">
+                <span>${p.title}</span>
+                <div>
+                    <button onclick="editPost('${doc.id}')" style="color:orange; border:none; background:none; cursor:pointer;">✎</button>
+                    <button onclick="deletePost('${doc.id}')" style="color:red; border:none; background:none; cursor:pointer;">✖</button>
+                </div>
             </div>
-        </div>
-    `).join('');
+        `;
+    });
 }
 
-function deletePost(i) {
+async function deletePost(id) {
     if(confirm("O'chirilsinmi?")) {
-        posts.splice(i, 1);
-        localStorage.setItem('housing_data_v2', JSON.stringify(posts));
-        renderAll();
+        await db.collection("posts").doc(id).delete();
     }
 }
 
-function editPost(i) {
-    const p = posts[i];
+async function editPost(id) {
+    const doc = await db.collection("posts").doc(id).get();
+    const p = doc.data();
     document.getElementById('post-title').value = p.title;
     document.getElementById('post-desc').value = p.desc;
     document.getElementById('post-map').value = p.map;
-    document.getElementById('edit-index').value = i;
-    document.getElementById('form-title').innerText = "E'lonni Tahrirlash";
-}
-
-function updateAdmin() {
-    const u = document.getElementById('new-login').value;
-    const p = document.getElementById('new-pass').value;
-    if(u && p) {
-        admin = { user: u, pass: p };
-        localStorage.setItem('admin_data_v2', JSON.stringify(admin));
-        alert("Admin yangilandi!");
-    }
+    document.getElementById('edit-id').value = id;
+    document.getElementById('form-title').innerText = "Tahrirlash";
+    document.getElementById('save-btn').innerText = "Yangilash";
 }
 
 function clearForm() {
@@ -116,8 +141,9 @@ function clearForm() {
     document.getElementById('post-desc').value = "";
     document.getElementById('post-map').value = "";
     document.getElementById('post-image').value = "";
-    document.getElementById('edit-index').value = "";
+    document.getElementById('edit-id').value = "";
     document.getElementById('form-title').innerText = "Yangi E'lon Qo'shish";
+    document.getElementById('save-btn').innerText = "Saqlash";
 }
 
 document.getElementById('admin-btn').onclick = () => document.getElementById('login-modal').style.display = 'flex';
