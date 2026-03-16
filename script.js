@@ -1,49 +1,40 @@
-// 1. Firebase Konfiguratsiyasi
+// YANGI KONFIGURATSIYA
 const firebaseConfig = {
-    apiKey: "AIzaSyCrJYqb9ClyUygAfJPoTqXmq5w2TGAvAkY",
-    authDomain: "mingbulak-ijara-32bea.firebaseapp.com",
-    projectId: "mingbulak-ijara-32bea",
-    storageBucket: "mingbulak-ijara-32bea.firebasestorage.app",
-    messagingSenderId: "1057060835809",
-    appId: "1:1057060835809:web:c267dc2666ce262d45c2a0"
+  apiKey: "AIzaSyCpFL2AJO17gfjQa2TTcNqa-lAdEgqVxpw",
+  authDomain: "mingbulak-ijara.firebaseapp.com",
+  projectId: "mingbulak-ijara",
+  storageBucket: "mingbulak-ijara.firebasestorage.app",
+  messagingSenderId: "999036185534",
+  appId: "1:999036185534:web:112a51eb1dcf76c685a7ef"
 };
 
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 const adminAuth = { user: "mystra", pass: "mystra2014" };
 
-// --- YANGI: Rasmni kichraytirish funksiyasi ---
+// Rasmni kichraytirish (Firestore uchun muhim!)
 async function resizeImage(file) {
     return new Promise((resolve) => {
         const reader = new FileReader();
         reader.readAsDataURL(file);
-        reader.onload = (event) => {
+        reader.onload = (e) => {
             const img = new Image();
-            img.src = event.target.result;
+            img.src = e.target.result;
             img.onload = () => {
                 const canvas = document.createElement('canvas');
-                const MAX_WIDTH = 800; // Rasmni kengligini 800px ga tushiramiz
+                const MAX_WIDTH = 500;
                 let width = img.width;
                 let height = img.height;
-
-                if (width > MAX_WIDTH) {
-                    height *= MAX_WIDTH / width;
-                    width = MAX_WIDTH;
-                }
-
-                canvas.width = width;
-                canvas.height = height;
+                if (width > MAX_WIDTH) { height *= MAX_WIDTH / width; width = MAX_WIDTH; }
+                canvas.width = width; canvas.height = height;
                 const ctx = canvas.getContext('2d');
                 ctx.drawImage(img, 0, 0, width, height);
-                
-                // Sifatni 0.7 (70%) qilib saqlaymiz, bu hajmni keskin kamaytiradi
-                resolve(canvas.toDataURL('image/jpeg', 0.7));
+                resolve(canvas.toDataURL('image/jpeg', 0.6));
             };
         };
     });
 }
 
-// Bazadan ma'lumotlarni o'qish
 function renderAll() {
     const grid = document.getElementById('main-grid');
     db.collection("posts").orderBy("createdAt", "desc").onSnapshot((snapshot) => {
@@ -51,13 +42,13 @@ function renderAll() {
         snapshot.forEach((doc) => {
             const p = doc.data();
             grid.innerHTML += `
-                <div class="card">
-                    ${p.image ? `<img src="${p.image}" class="card-img">` : `<div class="card-img" style="display:flex;align-items:center;justify-content:center;background:#eee;color:#999;">Rasm yo'q</div>`}
-                    <h3>${p.title}</h3>
-                    <p>${p.desc}</p>
-                    <div style="margin-top:15px; display:flex; gap:10px;">
-                        <a href="https://t.me/mingbulak_im_bot" class="btn-action">Murojaat</a>
-                        ${p.map ? `<a href="${p.map}" target="_blank" class="btn-action" style="background:#27ae60;">Xarita</a>` : ''}
+                <div class="card" data-aos="fade-up">
+                    ${p.image ? `<img src="${p.image}" class="card-img">` : `<div class="card-img" style="background:#334155;"></div>`}
+                    <h3 style="margin-top:15px;">${p.title}</h3>
+                    <p style="opacity:0.7; font-size:0.9rem; margin:10px 0;">${p.desc}</p>
+                    <div style="display:flex; gap:10px;">
+                        <a href="https://t.me/mingbulak_im_bot" class="btn-primary" style="padding:8px 15px; font-size:0.8rem;">Murojaat</a>
+                        ${p.map ? `<a href="${p.map}" target="_blank" class="btn-secondary" style="padding:8px 15px; font-size:0.8rem; margin:0;">Xarita</a>` : ''}
                     </div>
                 </div>`;
         });
@@ -65,104 +56,51 @@ function renderAll() {
     });
 }
 
-// E'lon saqlash
 async function savePost() {
     const title = document.getElementById('post-title').value;
     const desc = document.getElementById('post-desc').value;
     const map = document.getElementById('post-map').value;
     const imgFile = document.getElementById('post-image').files[0];
-    const editId = document.getElementById('edit-id').value;
 
-    if(!title || !desc) return alert("Sarlavha va tavsifni to'ldiring!");
+    if(!title || !desc) return alert("To'ldiring!");
 
     let imgData = "";
-    if (imgFile) {
-        // Avvalgidan farqli ravishda endi resizeImage funksiyasini chaqiramiz
-        imgData = await resizeImage(imgFile);
-    }
+    if (imgFile) imgData = await resizeImage(imgFile);
 
-    const postData = {
-        title,
-        desc,
-        map,
-        createdAt: new Date()
-    };
-
-    if (imgData) postData.image = imgData;
+    const postData = { title, desc, map, createdAt: new Date(), image: imgData };
 
     try {
-        if(editId === "") {
-            await db.collection("posts").add(postData);
-        } else {
-            await db.collection("posts").doc(editId).update(postData);
-        }
-        clearForm();
-        alert("Muvaffaqiyatli saqlandi!");
-    } catch (e) {
-        console.error("Xatolik tafsiloti:", e);
-        alert("Xatolik yuz berdi. Iltimos, boshqa rasm tanlang yoki bazani tekshiring.");
-    }
+        await db.collection("posts").add(postData);
+        alert("Saqlandi!");
+        closeModal();
+    } catch (e) { alert("Xato: " + e.message); }
 }
 
-// --- Admin Panel va Tungi rejim funksiyalari (o'zgarishsiz qoladi) ---
-document.getElementById('theme-toggle').onclick = () => {
-    document.body.classList.toggle('dark-mode');
-    document.getElementById('theme-toggle').innerText = document.body.classList.contains('dark-mode') ? "☀️ Kungi Rejim" : "🌙 Tungi Rejim";
-};
-
 function checkAdmin() {
-    const u = document.getElementById('login').value;
-    const p = document.getElementById('password').value;
-    if(u === adminAuth.user && p === adminAuth.pass) {
+    if(document.getElementById('login').value === adminAuth.user && 
+       document.getElementById('password').value === adminAuth.pass) {
         document.getElementById('login-modal').style.display = 'none';
         document.getElementById('admin-panel').style.display = 'flex';
-    } else { alert("Login yoki parol xato!"); }
+    } else { alert("Xato!"); }
 }
 
 function renderAdminList(snapshot) {
     const list = document.getElementById('admin-post-list');
     list.innerHTML = "";
     snapshot.forEach((doc) => {
-        const p = doc.data();
-        list.innerHTML += `
-            <div style="display:flex; justify-content:space-between; padding:10px; background:rgba(0,0,0,0.05); margin-bottom:5px; border-radius:8px;">
-                <span>${p.title}</span>
-                <div>
-                    <button onclick="editPost('${doc.id}')" style="color:orange; border:none; background:none; cursor:pointer; font-size:1.2em;">✎</button>
-                    <button onclick="deletePost('${doc.id}')" style="color:red; border:none; background:none; cursor:pointer; font-size:1.2em;">✖</button>
-                </div>
-            </div>`;
+        list.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+            <span>${doc.data().title}</span>
+            <button onclick="deletePost('${doc.id}')" style="color:red; background:none; border:none; cursor:pointer;">✖</button>
+        </div>`;
     });
 }
 
 async function deletePost(id) {
-    if(confirm("O'chirilsinmi?")) {
-        await db.collection("posts").doc(id).delete();
-    }
-}
-
-async function editPost(id) {
-    const doc = await db.collection("posts").doc(id).get();
-    const p = doc.data();
-    document.getElementById('post-title').value = p.title;
-    document.getElementById('post-desc').value = p.desc;
-    document.getElementById('post-map').value = p.map;
-    document.getElementById('edit-id').value = id;
-    document.getElementById('form-title').innerText = "Tahrirlash";
-    document.getElementById('save-btn').innerText = "Yangilash";
-}
-
-function clearForm() {
-    document.getElementById('post-title').value = "";
-    document.getElementById('post-desc').value = "";
-    document.getElementById('post-map').value = "";
-    document.getElementById('post-image').value = "";
-    document.getElementById('edit-id').value = "";
-    document.getElementById('form-title').innerText = "Yangi E'lon Qo'shish";
+    if(confirm("O'chirilsinmi?")) await db.collection("posts").doc(id).delete();
 }
 
 document.getElementById('admin-btn').onclick = () => document.getElementById('login-modal').style.display = 'flex';
-function closeModal() { document.getElementById('login-modal').style.display = 'none'; }
-function logout() { document.getElementById('admin-panel').style.display = 'none'; }
+function closeModal() { document.querySelectorAll('.modal').forEach(m => m.style.display = 'none'); }
+function logout() { location.reload(); }
 
 renderAll();
