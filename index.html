@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mingbuloq IM Ijaralar Tizimi</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
 <body class="light-mode">
     <div class="bg-overlay"></div>
@@ -46,8 +48,8 @@
             <div class="modal-content admin-wide">
                 <h3 id="form-title">Yangi E'lon Qo'shish</h3>
                 <div class="admin-form">
-                    <input type="hidden" id="edit-index">
-                    <input type="text" id="post-title" placeholder="Sarlavha (masalan: 2 xonali hovli)">
+                    <input type="hidden" id="edit-id">
+                    <input type="text" id="post-title" placeholder="Sarlavha">
                     <textarea id="post-desc" placeholder="Uy haqida batafsil ma'lumot..." rows="3"></textarea>
                     <input type="text" id="post-map" placeholder="Google Maps Linki">
                     
@@ -61,12 +63,7 @@
                 <hr>
                 <h4>E'lonlarni Boshqarish</h4>
                 <div id="admin-post-list"></div>
-
-                <hr>
-                <h4>Admin Sozlamalari</h4>
-                <input type="text" id="new-login" placeholder="Yangi login">
-                <input type="password" id="new-pass" placeholder="Yangi parol">
-                <button onclick="updateAdmin()" class="btn-save">Ma'lumotlarni Yangilash</button>
+                
                 <button onclick="logout()" class="btn-exit">Paneldan Chiqish</button>
             </div>
         </div>
@@ -74,10 +71,10 @@
 
     <footer>
         <div class="container">
-            <p>Bot bilan muammo bo'lsa: <a href="https://t.me/compheonix" target="_blank">@compheonix</a> kanaliga ulaning.</p>
+            <p>Bot bilan muammo bo'lsa: <a href="https://t.me/compheonix" target="_blank">@compheonix</a></p>
             <div class="creators">
                 <strong>Creators:</strong><br>
-                Solijon • Muhammadkarimov • Ulug'bek Shuxratullayev • Dilmurod Abduvaxobov
+                Solijon Muhammadkarimov • Ulug'bek Shuxratullayev • Dilmurod Abduvaxobov
             </div>
             <p class="powered">Powered by NetGlobal</p>
         </div>
