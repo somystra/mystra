@@ -3,83 +3,74 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mingbuloq IM Ijaralar Tizimi</title>
+    <title>Mingbulak IM | Ijaralar</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
+
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
 </head>
-<body class="light-mode">
-    <div class="bg-overlay"></div>
+<body>
+    <div class="background-animation"></div>
 
-    <header>
-        <div class="container">
-            <h1 class="main-title">Mingbuloq ixtisoslashtirilgan maktabi o‘quvchilari uchun ijaralar ro‘yxati</h1>
-            <div class="nav-controls">
-                <button id="theme-toggle" class="btn-tool">🌙 Tungi Rejim</button>
-                <button id="admin-btn" class="btn-tool">🔑 Admin Panel</button>
-            </div>
-            
-            <div class="give-rent-container">
-                <a href="https://t.me/mingbulak_im_bot" target="_blank" class="btn-give-rent">
-                    🏠 Uyimni ijaraga beraman
-                </a>
+    <nav class="navbar">
+        <div class="container nav-content">
+            <div class="logo">Mingbulak<span>IM</span></div>
+            <button id="admin-btn" class="nav-icon"><i class="fas fa-user-shield"></i></button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container hero-inner" data-aos="zoom-out-up">
+            <h1>Ixtisoslashtirilgan maktab uchun <br><span>Shinam Ijaralar</span></h1>
+            <p>Xavfsiz va qulay uylarni bir zumda toping.</p>
+            <div class="hero-btns">
+                <a href="#announcements" class="btn-primary">Uylarni ko'rish</a>
+                <a href="https://t.me/mingbulak_im_bot" target="_blank" class="btn-secondary">Ijaraga berish</a>
             </div>
         </div>
     </header>
 
     <main class="container">
         <section id="announcements">
-            <h2 class="section-title">Mavjud Ijaralar</h2>
-            <div class="card-grid" id="main-grid">
-                </div>
+            <div class="section-header" data-aos="fade-right">
+                <h2>Mavjud Ijaralar</h2>
+                <div class="line"></div>
+            </div>
+            <div class="card-grid" id="main-grid"></div>
         </section>
-
-        <div id="login-modal" class="modal">
-            <div class="modal-content">
-                <h3>Admin Kirish</h3>
-                <input type="text" id="login" placeholder="Login">
-                <input type="password" id="password" placeholder="Parol">
-                <button onclick="checkAdmin()" class="btn-action">Kirish</button>
-                <button onclick="closeModal()" class="btn-secondary">Yopish</button>
-            </div>
-        </div>
-
-        <div id="admin-panel" class="modal">
-            <div class="modal-content admin-wide">
-                <h3 id="form-title">Yangi E'lon Qo'shish</h3>
-                <div class="admin-form">
-                    <input type="hidden" id="edit-id">
-                    <input type="text" id="post-title" placeholder="Sarlavha">
-                    <textarea id="post-desc" placeholder="Uy haqida batafsil ma'lumot..." rows="3"></textarea>
-                    <input type="text" id="post-map" placeholder="Google Maps Linki">
-                    
-                    <label style="display:block; margin: 10px 0 5px; font-size:0.85em;">Uy rasmini tanlang:</label>
-                    <input type="file" id="post-image" accept="image/*">
-                    
-                    <button onclick="savePost()" class="btn-action" id="save-btn" style="width:100%; margin-top:10px;">Saqlash</button>
-                    <button onclick="clearForm()" class="btn-secondary" style="width:100%;">Tozalash</button>
-                </div>
-
-                <hr>
-                <h4>E'lonlarni Boshqarish</h4>
-                <div id="admin-post-list"></div>
-                
-                <button onclick="logout()" class="btn-exit">Paneldan Chiqish</button>
-            </div>
-        </div>
     </main>
 
-    <footer>
-        <div class="container">
-            <p>Bot bilan muammo bo'lsa: <a href="https://t.me/compheonix" target="_blank">@compheonix</a></p>
-            <div class="creators">
-                <strong>Creators:</strong><br>
-                Solijon Muhammadkarimov • Ulug'bek Shuxratullayev • Dilmurod Abduvaxobov
-            </div>
-            <p class="powered">Powered by NetGlobal</p>
+    <div id="login-modal" class="modal">
+        <div class="modal-content glass">
+            <h3>Admin Tizimi</h3>
+            <input type="text" id="login" placeholder="Login">
+            <input type="password" id="password" placeholder="Parol">
+            <button onclick="checkAdmin()" class="btn-primary w-100">Kirish</button>
+            <button onclick="closeModal()" class="btn-link">Yopish</button>
         </div>
-    </footer>
+    </div>
 
+    <div id="admin-panel" class="modal">
+        <div class="modal-content glass admin-box">
+            <h3 id="form-title">Yangi e'lon qo'shish</h3>
+            <input type="hidden" id="edit-id">
+            <input type="text" id="post-title" placeholder="Sarlavha">
+            <textarea id="post-desc" placeholder="Tavsif..." rows="3"></textarea>
+            <input type="text" id="post-map" placeholder="Xarita linki">
+            <input type="file" id="post-image" accept="image/*">
+            <button onclick="savePost()" class="btn-primary w-100" id="save-btn">Saqlash</button>
+            <hr style="margin: 20px 0; opacity: 0.2;">
+            <div id="admin-post-list"></div>
+            <button onclick="logout()" class="btn-danger">Chiqish</button>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>AOS.init({ duration: 1000, once: true });</script>
     <script src="script.js"></script>
 </body>
 </html>
