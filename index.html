@@ -24,12 +24,11 @@
     </nav>
 
     <header class="hero">
-        <div class="container hero-inner" data-aos="zoom-out-up">
+        <div class="container hero-inner" data-aos="zoom-in">
             <h1>Ixtisoslashtirilgan maktab uchun <br><span>Shinam Ijaralar</span></h1>
-            <p>Xavfsiz va qulay uylarni bir zumda toping.</p>
+            <p>NetGlobal Team tomonidan taqdim etilgan zamonaviy ijara platformasi.</p>
             <div class="hero-btns">
                 <a href="#announcements" class="btn-primary">Uylarni ko'rish</a>
-                <a href="https://t.me/mingbulak_im_bot" target="_blank" class="btn-secondary">Ijaraga berish</a>
             </div>
         </div>
     </header>
@@ -40,13 +39,14 @@
                 <h2>Mavjud Ijaralar</h2>
                 <div class="line"></div>
             </div>
-            <div class="card-grid" id="main-grid"></div>
+            <div class="card-grid" id="main-grid">
+                </div>
         </section>
     </main>
 
     <div id="login-modal" class="modal">
         <div class="modal-content glass">
-            <h3>Admin Tizimi</h3>
+            <h3>Admin Kirish</h3>
             <input type="text" id="login" placeholder="Login">
             <input type="password" id="password" placeholder="Parol">
             <button onclick="checkAdmin()" class="btn-primary w-100">Kirish</button>
@@ -56,18 +56,24 @@
 
     <div id="admin-panel" class="modal">
         <div class="modal-content glass admin-box">
-            <h3 id="form-title">Yangi e'lon qo'shish</h3>
-            <input type="hidden" id="edit-id">
-            <input type="text" id="post-title" placeholder="Sarlavha">
-            <textarea id="post-desc" placeholder="Tavsif..." rows="3"></textarea>
-            <input type="text" id="post-map" placeholder="Xarita linki">
+            <h3>Yangi Ijara Qo'shish</h3>
+            <input type="text" id="post-title" placeholder="Sarlavha (masalan: 3 xonali uy)">
+            <textarea id="post-desc" placeholder="Uy haqida ma'lumot..." rows="3"></textarea>
+            <input type="text" id="post-map" placeholder="Google Maps linki">
             <input type="file" id="post-image" accept="image/*">
-            <button onclick="savePost()" class="btn-primary w-100" id="save-btn">Saqlash</button>
+            <button onclick="savePost()" class="btn-primary w-100" id="save-btn">Bazaga Saqlash</button>
             <hr style="margin: 20px 0; opacity: 0.2;">
             <div id="admin-post-list"></div>
             <button onclick="logout()" class="btn-danger">Chiqish</button>
         </div>
     </div>
+
+    <footer>
+        <div class="container footer-content">
+            <p>&copy; 2026 Mingbulak IM Ijaralar Portali</p>
+            <p class="creators">Yaratuvchilar: <span>NetGlobal Team</span></p>
+        </div>
+    </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>AOS.init({ duration: 1000, once: true });</script>
