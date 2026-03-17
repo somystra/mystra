@@ -11,7 +11,7 @@ firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
 // 2. AI CONFIG (HUGGING FACE)
-const HF_TOKEN = "hf_hf_ZeMmtgVoTJrBcEFMxAEchNzdpDgfQMwUuF"; 
+const HF_TOKEN = "_hf_ZeMmtgVoTJrBcEFMxAEchNzdpDgfQMwUuF"; 
 const HF_MODEL = "mistralai/Mistral-7B-Instruct-v0.2";
 
 // 3. TRANSLATIONS
