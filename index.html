@@ -3,30 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mingbulak IM | Ijaralar</title>
+    <title>Mingbuloq IM | Ijaralar & AI Yordamchi</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <div class="background-animation"></div>
 
     <nav class="navbar">
         <div class="container nav-content">
-            <div class="logo">Mingbulak<span>IM</span></div>
-            <button id="admin-btn" class="nav-icon"><i class="fas fa-user-shield"></i></button>
+            <div class="logo">Mingbuloq<span>IM</span></div>
+            <div class="nav-actions">
+                <button id="search-toggle" class="nav-icon"><i class="fas fa-search"></i></button>
+                <button id="admin-btn" class="nav-icon"><i class="fas fa-user-shield"></i></button>
+            </div>
         </div>
     </nav>
 
+    <div id="search-bar" class="search-bar-container container">
+        <input type="text" id="search-input" placeholder="Sarlavha yoki tavsif bo'yicha qidirish...">
+    </div>
+
     <header class="hero">
         <div class="container hero-inner" data-aos="zoom-in">
-            <h1>Ixtisoslashtirilgan maktab uchun <br><span>Shinam Ijaralar</span></h1>
-            <p>NetGlobal Team tomonidan taqdim etilgan zamonaviy ijara platformasi.</p>
+            <h1>Maktabingizga yaqin <br><span>Shinam Ijaralar</span></h1>
+            <p>NetGlobal Team va Gemini AI hamkorligida yaratilgan aqlli platforma.</p>
             <div class="hero-btns">
                 <a href="#announcements" class="btn-primary">Uylarni ko'rish</a>
             </div>
@@ -44,6 +57,21 @@
         </section>
     </main>
 
+    <div id="ai-chat-wrapper" class="ai-chat-hidden">
+        <div class="ai-chat-header">
+            <span><i class="fas fa-robot"></i> AI Yordamchi</span>
+            <button id="ai-chat-close"><i class="fas fa-times"></i></button>
+        </div>
+        <div id="ai-chat-body" class="ai-chat-body">
+            <div class="ai-message bot">Salom! Men Gemini AIman. Maktab atrofidan ijara topishda yordam beraman.</div>
+        </div>
+        <div class="ai-chat-input-area">
+            <input type="text" id="ai-user-input" placeholder="Savolingizni yozing...">
+            <button id="ai-send-btn"><i class="fas fa-paper-plane"></i></button>
+        </div>
+    </div>
+    <button id="ai-chat-toggle" class="ai-toggle-btn"><i class="fas fa-comment-dots"></i></button>
+
     <div id="login-modal" class="modal">
         <div class="modal-content glass">
             <h3>Admin Kirish</h3>
@@ -59,7 +87,11 @@
             <h3>Yangi Ijara Qo'shish</h3>
             <input type="text" id="post-title" placeholder="Sarlavha (masalan: 3 xonali uy)">
             <textarea id="post-desc" placeholder="Uy haqida ma'lumot..." rows="3"></textarea>
-            <input type="text" id="post-map" placeholder="Google Maps linki">
+            
+            <div id="map-picker" style="height: 250px; border-radius: 12px; margin: 10px 0; border: 1px solid var(--glass-border);"></div>
+            <p style="font-size: 0.8rem; color: #a855f7; margin-top: -5px;">Xaritadan uyning ustiga bosing</p>
+            <input type="hidden" id="selected-coords">
+
             <input type="file" id="post-image" accept="image/*">
             <button onclick="savePost()" class="btn-primary w-100" id="save-btn">Bazaga Saqlash</button>
             <hr style="margin: 20px 0; opacity: 0.2;">
@@ -70,13 +102,18 @@
 
     <footer>
         <div class="container footer-content">
-            <p>&copy; 2026 Mingbulak IM Ijaralar Portali</p>
+            <p>&copy; 2026 Mingbuloq IM Ijaralar Portali</p>
             <p class="creators">Yaratuvchilar: <span>NetGlobal Team</span></p>
+            
+            <div class="footer-logo-wrapper">
+                <img src="https://ibb.co/7dPPdQQR" alt="NetGlobal Logo" class="footer-logo">
+            </div>
         </div>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>AOS.init({ duration: 1000, once: true });</script>
+    
     <script src="script.js"></script>
 </body>
 </html>
