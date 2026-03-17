@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Mingbuloq IM | Smart Rental Portal</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
@@ -28,7 +28,7 @@
                     <option value="ru">RU</option>
                 </select>
                 <button id="search-toggle" class="nav-icon"><i class="fas fa-search"></i></button>
-                <button id="admin-btn" class="nav-icon"><i class="fas fa-user-shield"></i></button>
+                <button id="admin-btn" class="nav-icon"><i class="fas fa-lock"></i></button>
             </div>
         </div>
     </nav>
@@ -38,38 +38,47 @@
     </div>
 
     <header class="hero">
-        <div class="container hero-inner" data-aos="zoom-in">
+        <div class="hero-bg-shapes">
+            <div class="shape s1"></div>
+            <div class="shape s2"></div>
+        </div>
+        <div class="container hero-inner" data-aos="zoom-out">
             <h1 id="hero-title">Maktabingizga Yaqin <br><span>Aqlli Ijaralar</span></h1>
             <p id="hero-subtitle">NetGlobal Team tomonidan yaratilgan innovatsion platforma.</p>
-            <a href="#main-grid" class="btn-primary" id="view-btn">E'lonlarni ko'rish</a>
+            <div class="hero-actions">
+                <a href="#announcements" class="btn-primary" id="view-btn">E'lonlarni ko'rish</a>
+                <a href="https://t.me/mingbulak_im_bot" target="_blank" class="btn-secondary" id="post-btn">
+                    <i class="fab fa-telegram"></i> E'lon berish
+                </a>
+            </div>
         </div>
     </header>
 
     <main class="container">
         <section id="announcements">
-            <div class="section-header" data-aos="fade-right">
+            <div class="section-header" data-aos="fade-up">
                 <h2 id="section-title">Barcha E'lonlar</h2>
-                <div class="line"></div>
+                <div class="gradient-line"></div>
             </div>
             <div class="card-grid" id="main-grid"></div>
         </section>
     </main>
 
-    <div id="ai-chat-wrapper" class="ai-chat-hidden">
+    <div id="ai-chat-wrapper" class="ai-chat-hidden glass-card">
         <div class="ai-chat-header">
-            <span><i class="fas fa-robot"></i> AI Assistant</span>
+            <span><i class="fas fa-robot"></i> NetGlobal AI</span>
             <button id="ai-chat-close"><i class="fas fa-times"></i></button>
         </div>
         <div id="ai-chat-body" class="ai-chat-body"></div>
         <div class="ai-chat-input-area">
-            <input type="text" id="ai-user-input" placeholder="...">
+            <input type="text" id="ai-user-input" placeholder="Xabar...">
             <button id="ai-send-btn"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
     <button id="ai-chat-toggle" class="ai-toggle-btn"><i class="fas fa-comment-dots"></i></button>
 
     <div id="login-modal" class="modal">
-        <div class="modal-content glass">
+        <div class="modal-content glass-card">
             <h3 id="admin-login-text">Admin Kirish</h3>
             <input type="text" id="login" placeholder="Login">
             <input type="password" id="password" placeholder="Parol">
@@ -79,14 +88,14 @@
     </div>
 
     <div id="admin-panel" class="modal">
-        <div class="modal-content glass admin-box">
+        <div class="modal-content glass-card admin-box">
             <h3 id="add-post-text">Yangi Ijara</h3>
             <input type="text" id="post-title" placeholder="Sarlavha">
             <textarea id="post-desc" placeholder="Tavsif" rows="3"></textarea>
-            <div id="map-picker" style="height: 200px; border-radius: 12px; margin-bottom: 10px;"></div>
+            <div id="map-picker" class="map-container"></div>
             <input type="hidden" id="selected-coords">
             <input type="file" id="post-image" accept="image/*">
-            <button onclick="savePost()" class="btn-primary w-100" id="save-btn">Saqlash</button>
+            <button onclick="savePost()" class="btn-primary w-100" id="save-btn">Bazaga Saqlash</button>
             <div id="admin-post-list"></div>
             <button onclick="logout()" class="btn-danger">Chiqish</button>
         </div>
@@ -95,20 +104,22 @@
     <footer>
         <div class="container footer-content">
             <div class="footer-logo-wrapper">
-                <img src="https://ibb.co/8VcCvRy">
+                <img src="<a href="https://ibb.co/8VcCvRy"><img src="https://i.ibb.co/v8YFyrN/Net-Global-o-Yt-Mry.png" alt="Net-Global-o-Yt-Mry" border="0" /></a>" alt="NetGlobal Logo" class="footer-logo">
             </div>
-            <p>© 2026 Mingbuloq IM Ijaralar Portali</p>
+            <p class="copyright">© 2026 Mingbuloq IM Ijaralar Portali</p>
             <div class="creators">
                 <p id="creator-label">Yaratuvchilar:</p>
-                <strong>Solijon Muhammadkarimov</strong><br>
-                <strong>Ulug'bek Shuxratullayev</strong><br>
-                <strong>Dilmurod Abduvaxobov</strong>
+                <div class="names-row">
+                    <span>Solijon Muhammadkarimov</span>
+                    <span>Ulug'bek Shuxratullayev</span>
+                    <span>Dilmurod Abduvaxobov</span>
+                </div>
             </div>
         </div>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>AOS.init();</script>
+    <script>AOS.init({ duration: 800, once: true });</script>
     <script src="script.js"></script>
 </body>
 </html>
