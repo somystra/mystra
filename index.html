@@ -1,31 +1,32 @@
 <!DOCTYPE html>
-<html lang="uz">
+<html lang="uz" data-theme="light">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mingbuloq IM | Ijaralar & AI Yordamchi</title>
+    <title>Mingbuloq IM | Smart Rental Portal</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="background-animation"></div>
-
     <nav class="navbar">
         <div class="container nav-content">
             <div class="logo">Mingbuloq<span>IM</span></div>
-            <div class="nav-actions">
+            <div class="nav-right">
+                <button id="theme-toggle" class="nav-icon"><i class="fas fa-moon"></i></button>
+                <select id="lang-select" class="lang-dropdown">
+                    <option value="uz">UZ</option>
+                    <option value="en">EN</option>
+                    <option value="ru">RU</option>
+                </select>
                 <button id="search-toggle" class="nav-icon"><i class="fas fa-search"></i></button>
                 <button id="admin-btn" class="nav-icon"><i class="fas fa-user-shield"></i></button>
             </div>
@@ -33,40 +34,35 @@
     </nav>
 
     <div id="search-bar" class="search-bar-container container">
-        <input type="text" id="search-input" placeholder="Sarlavha yoki tavsif bo'yicha qidirish...">
+        <input type="text" id="search-input" placeholder="Qidiruv...">
     </div>
 
     <header class="hero">
         <div class="container hero-inner" data-aos="zoom-in">
-            <h1>Maktabingizga yaqin <br><span>Shinam Ijaralar</span></h1>
-            <p>NetGlobal Team va Gemini AI hamkorligida yaratilgan aqlli platforma.</p>
-            <div class="hero-btns">
-                <a href="#announcements" class="btn-primary">Uylarni ko'rish</a>
-            </div>
+            <h1 id="hero-title">Maktabingizga Yaqin <br><span>Aqlli Ijaralar</span></h1>
+            <p id="hero-subtitle">NetGlobal Team tomonidan yaratilgan innovatsion platforma.</p>
+            <a href="#main-grid" class="btn-primary" id="view-btn">E'lonlarni ko'rish</a>
         </div>
     </header>
 
     <main class="container">
         <section id="announcements">
             <div class="section-header" data-aos="fade-right">
-                <h2>Mavjud Ijaralar</h2>
+                <h2 id="section-title">Barcha E'lonlar</h2>
                 <div class="line"></div>
             </div>
-            <div class="card-grid" id="main-grid">
-                </div>
+            <div class="card-grid" id="main-grid"></div>
         </section>
     </main>
 
     <div id="ai-chat-wrapper" class="ai-chat-hidden">
         <div class="ai-chat-header">
-            <span><i class="fas fa-robot"></i> AI Yordamchi</span>
+            <span><i class="fas fa-robot"></i> AI Assistant</span>
             <button id="ai-chat-close"><i class="fas fa-times"></i></button>
         </div>
-        <div id="ai-chat-body" class="ai-chat-body">
-            <div class="ai-message bot">Salom! Men Gemini AIman. Maktab atrofidan ijara topishda yordam beraman.</div>
-        </div>
+        <div id="ai-chat-body" class="ai-chat-body"></div>
         <div class="ai-chat-input-area">
-            <input type="text" id="ai-user-input" placeholder="Savolingizni yozing...">
+            <input type="text" id="ai-user-input" placeholder="...">
             <button id="ai-send-btn"><i class="fas fa-paper-plane"></i></button>
         </div>
     </div>
@@ -74,27 +70,23 @@
 
     <div id="login-modal" class="modal">
         <div class="modal-content glass">
-            <h3>Admin Kirish</h3>
+            <h3 id="admin-login-text">Admin Kirish</h3>
             <input type="text" id="login" placeholder="Login">
             <input type="password" id="password" placeholder="Parol">
-            <button onclick="checkAdmin()" class="btn-primary w-100">Kirish</button>
+            <button onclick="checkAdmin()" class="btn-primary w-100" id="login-btn">Kirish</button>
             <button onclick="closeModal()" class="btn-link">Yopish</button>
         </div>
     </div>
 
     <div id="admin-panel" class="modal">
         <div class="modal-content glass admin-box">
-            <h3>Yangi Ijara Qo'shish</h3>
-            <input type="text" id="post-title" placeholder="Sarlavha (masalan: 3 xonali uy)">
-            <textarea id="post-desc" placeholder="Uy haqida ma'lumot..." rows="3"></textarea>
-            
-            <div id="map-picker" style="height: 250px; border-radius: 12px; margin: 10px 0; border: 1px solid var(--glass-border);"></div>
-            <p style="font-size: 0.8rem; color: #a855f7; margin-top: -5px;">Xaritadan uyning ustiga bosing</p>
+            <h3 id="add-post-text">Yangi Ijara</h3>
+            <input type="text" id="post-title" placeholder="Sarlavha">
+            <textarea id="post-desc" placeholder="Tavsif" rows="3"></textarea>
+            <div id="map-picker" style="height: 200px; border-radius: 12px; margin-bottom: 10px;"></div>
             <input type="hidden" id="selected-coords">
-
             <input type="file" id="post-image" accept="image/*">
-            <button onclick="savePost()" class="btn-primary w-100" id="save-btn">Bazaga Saqlash</button>
-            <hr style="margin: 20px 0; opacity: 0.2;">
+            <button onclick="savePost()" class="btn-primary w-100" id="save-btn">Saqlash</button>
             <div id="admin-post-list"></div>
             <button onclick="logout()" class="btn-danger">Chiqish</button>
         </div>
@@ -102,18 +94,21 @@
 
     <footer>
         <div class="container footer-content">
-            <p>&copy; 2026 Mingbuloq IM Ijaralar Portali</p>
-            <p class="creators">Yaratuvchilar: <span>NetGlobal Team</span></p>
-            
             <div class="footer-logo-wrapper">
-                <img src="https://ibb.co/7dPPdQQR" alt="NetGlobal Logo" class="footer-logo">
+                <img src="https://ibb.co/8VcCvRy">
+            </div>
+            <p>© 2026 Mingbuloq IM Ijaralar Portali</p>
+            <div class="creators">
+                <p id="creator-label">Yaratuvchilar:</p>
+                <strong>Solijon Muhammadkarimov</strong><br>
+                <strong>Ulug'bek Shuxratullayev</strong><br>
+                <strong>Dilmurod Abduvaxobov</strong>
             </div>
         </div>
     </footer>
 
     <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>AOS.init({ duration: 1000, once: true });</script>
-    
+    <script>AOS.init();</script>
     <script src="script.js"></script>
 </body>
 </html>
