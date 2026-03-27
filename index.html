@@ -3,150 +3,332 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mingbuloq IM | NetGlobal Portal</title>
+    <title>Mingbuloq IM | NetGlobal Edition</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.26.0/ui/trumbowyg.min.css">
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
-    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     
-    <link rel="stylesheet" href="style.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.26.0/trumbowyg.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #0078d4;
+            --primary-hover: #005a9e;
+            --bg-mica: #f3f3f3;
+            --bg-card: rgba(255, 255, 255, 0.8);
+            --text: #1c1c1c;
+            --border: rgba(0, 0, 0, 0.1);
+            --glass: blur(20px) saturate(180%);
+            --shadow: 0 8px 16px rgba(0,0,0,0.08);
+            --ease-win: cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        [data-theme="dark"] {
+            --bg-mica: #202020;
+            --bg-card: rgba(45, 45, 45, 0.8);
+            --text: #ffffff;
+            --border: rgba(255, 255, 255, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-mica); color: var(--text); transition: 0.4s var(--ease-win); }
+        .container { width: 92%; max-width: 1200px; margin: auto; }
+
+        /* --- NAVBAR --- */
+        .navbar {
+            position: sticky; top: 10px; z-index: 1000;
+            backdrop-filter: var(--glass); background: var(--bg-card);
+            border: 1px solid var(--border); border-radius: 12px;
+            padding: 12px 0; margin: 10px auto; width: 95%; box-shadow: var(--shadow);
+        }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo-section { display: flex; align-items: center; gap: 12px; }
+        
+        .school-logos { display: flex; align-items: center; }
+        .school-logo {
+            width: 38px; height: 38px; border-radius: 50%;
+            border: 2px solid white; object-fit: cover;
+            margin-right: -10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-right { display: flex; gap: 10px; }
+        .nav-btn {
+            background: transparent; border: none; color: var(--text);
+            width: 40px; height: 40px; border-radius: 8px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: 0.2s;
+        }
+        .nav-btn:hover { background: rgba(0,0,0,0.05); }
+
+        /* --- HERO --- */
+        .hero { padding: 80px 0; text-align: center; }
+        .hero h1 { font-size: 3.2rem; font-weight: 700; margin-bottom: 15px; }
+        .hero h1 span { color: var(--primary); }
+        .hero p { opacity: 0.8; margin-bottom: 35px; }
+
+        .btn {
+            padding: 12px 25px; border-radius: 8px; font-weight: 600;
+            cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
+            transition: 0.2s var(--ease-win); border: 1px solid transparent;
+        }
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); }
+        .btn-secondary { background: var(--bg-card); color: var(--text); border-color: var(--border); }
+
+        /* --- CARDS --- */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }
+        .card {
+            background: var(--bg-card); backdrop-filter: var(--glass);
+            border: 1px solid var(--border); border-radius: 12px;
+            overflow: hidden; transition: 0.3s var(--ease-win);
+        }
+        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--primary); }
+        .card-img { width: 100%; height: 200px; object-fit: cover; }
+        .card-body { padding: 20px; }
+
+        /* --- ADMIN & EDITOR --- */
+        .modal {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.4); z-index: 2000; justify-content: center; align-items: center;
+            backdrop-filter: blur(8px);
+        }
+        .modal-content {
+            background: var(--bg-card); padding: 30px; border-radius: 16px;
+            width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto;
+            border: 1px solid var(--border); box-shadow: var(--shadow);
+        }
+
+        /* Wikipedia Style Editor Overrides */
+        .trumbowyg-box { border-radius: 8px; border: 1px solid var(--border) !important; }
+        .trumbowyg-editor { min-height: 200px !important; background: white !important; color: black !important; }
+        [data-theme="dark"] .trumbowyg-editor { background: #2d2d2d !important; color: white !important; }
+
+        .admin-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
+        .tab-btn { padding: 10px 20px; background: none; border: none; color: var(--text); cursor: pointer; opacity: 0.6; }
+        .tab-btn.active { opacity: 1; border-bottom: 2px solid var(--primary); font-weight: bold; }
+
+        .map-container { height: 250px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border); }
+
+        footer { padding: 40px 0; text-align: center; border-top: 1px solid var(--border); margin-top: 50px; }
+    </style>
 </head>
 <body>
-    <nav class="navbar">
+
+    <nav class="navbar" data-aos="fade-down">
         <div class="container nav-content">
-            <div class="logo-wrapper">
-                <img src="https://i.ibb.co/vz6W7M2/netglobal-logo.png" alt="Logo" class="circle-logo">
-                <div class="logo">Mingbuloq<span>IM</span></div>
+            <div class="logo-section">
+                <div class="school-logos">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqYF7lOa6xR5mG7p5Zp9zQ" class="school-logo">
+                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_x-W5_f5-G5z9A" class="school-logo">
+                </div>
+                <h2 style="font-size: 1.2rem; font-weight: 700;">Mingbuloq<span>IM</span></h2>
             </div>
             <div class="nav-right">
-                <button id="theme-toggle" class="nav-icon"><i class="fas fa-moon"></i></button>
-                <select id="lang-select" class="lang-dropdown">
-                    <option value="uz">UZ</option>
-                    <option value="en">EN</option>
-                    <option value="ru">RU</option>
-                </select>
-                <button id="search-toggle" class="nav-icon"><i class="fas fa-search"></i></button>
-                <button id="admin-btn" class="nav-icon"><i class="fas fa-user-gear"></i></button>
+                <button onclick="toggleTheme()" class="nav-btn"><i class="fas fa-moon"></i></button>
+                <button onclick="openLogin()" class="nav-btn"><i class="fas fa-lock"></i></button>
             </div>
         </div>
     </nav>
 
-    <div id="search-bar" class="search-bar-container container">
-        <input type="text" id="search-input" placeholder="Qidiruv...">
-    </div>
-
     <header class="hero">
-        <div class="hero-bg-shapes"><div class="shape s1"></div><div class="shape s2"></div></div>
-        <div class="container hero-inner" data-aos="zoom-out">
-            <h1 id="hero-title">Maktabingizga Yaqin <br><span>Aqlli Ijaralar</span></h1>
-            <p id="hero-subtitle">NetGlobal Team tomonidan yaratilgan innovatsion platforma.</p>
+        <div class="container">
+            <h1 data-aos="zoom-in">Ixtisoslashtirilgan Maktab <br><span>Smart Portali</span></h1>
+            <p>NetGlobal Team tomonidan taqdim etilgan zamonaviy ijara platformasi.</p>
             <div class="hero-actions">
-                <a href="#announcements" class="btn-primary" id="view-btn">E'lonlarni ko'rish</a>
-                <a href="https://t.me/mingbulak_im_bot" target="_blank" class="btn-secondary" id="post-btn">
-                    <i class="fab fa-telegram"></i> E'lon berish
-                </a>
+                <a href="#main-grid" class="btn btn-primary">E'lonlarni ko'rish</a>
+                <a href="https://t.me/your_bot" class="btn btn-secondary"><i class="fab fa-telegram"></i> Botga o'tish</a>
             </div>
         </div>
     </header>
 
     <main class="container">
-        <section id="announcements">
-            <div class="section-header">
-                <h2 id="section-title">Barcha E'lonlar</h2>
-                <div class="gradient-line"></div>
+        <div class="card-grid" id="main-grid">
             </div>
-            <div class="card-grid" id="main-grid"></div>
-        </section>
     </main>
 
-    <div id="ai-chat-wrapper" class="ai-chat-hidden glass-card">
-        <div class="ai-chat-header">
-            <span><i class="fas fa-robot"></i> NetGlobal AI</span>
-            <button id="ai-chat-close"><i class="fas fa-times"></i></button>
-        </div>
-        <div id="ai-chat-body" class="ai-chat-body"></div>
-        <div class="ai-chat-input-area">
-            <input type="text" id="ai-user-input" placeholder="Xabar...">
-            <button id="ai-send-btn"><i class="fas fa-paper-plane"></i></button>
-        </div>
-    </div>
-    <button id="ai-chat-toggle" class="ai-toggle-btn"><i class="fas fa-comment-dots"></i></button>
-
     <div id="login-modal" class="modal">
-        <div class="modal-content glass-card">
-            <h3 id="admin-login-text">Admin Kirish</h3>
-            <input type="text" id="login" placeholder="Login">
-            <input type="password" id="password" placeholder="Parol">
-            <button onclick="checkAdmin()" class="btn-primary w-100">Kirish</button>
-            <button onclick="closeModal()" class="btn-link">Yopish</button>
+        <div class="modal-content" style="max-width: 400px;">
+            <h3>Admin Kirish</h3><br>
+            <input type="text" id="adm-user" placeholder="Login" style="width:100%; padding:10px; margin-bottom:10px;">
+            <input type="password" id="adm-pass" placeholder="Parol" style="width:100%; padding:10px; margin-bottom:20px;">
+            <button onclick="handleLogin()" class="btn btn-primary" style="width:100%;">Kirish</button>
+            <button onclick="closeModals()" class="btn" style="width:100%; margin-top:10px;">Yopish</button>
         </div>
     </div>
 
     <div id="admin-panel" class="modal">
-        <div class="modal-content glass-card admin-box">
+        <div class="modal-content">
             <div class="admin-tabs">
-                <button onclick="showTab('add-post')" class="tab-btn active" id="tab-btn-post">E'lon</button>
-                <button onclick="showTab('settings')" class="tab-btn" id="tab-btn-style">Dizayn</button>
-                <button onclick="showTab('security')" class="tab-btn" id="tab-btn-sec">Xavfsizlik</button>
+                <button onclick="showTab('add')" class="tab-btn active">E'lon Qo'shish</button>
+                <button onclick="showTab('sec')" class="tab-btn">Xavfsizlik</button>
+                <button onclick="showTab('style')" class="tab-btn">Dizayn</button>
             </div>
 
-            <div id="tab-add-post" class="tab-content">
-                <input type="text" id="post-title" placeholder="Sarlavha">
-                <textarea id="post-desc" placeholder="Tavsif (Bu yerga batafsil ma'lumot yozing...)" rows="10"></textarea>
+            <div id="tab-add">
+                <input type="text" id="p-title" placeholder="Sarlavha" style="width:100%; padding:12px; margin-bottom:15px; border-radius:8px; border:1px solid var(--border);">
+                <textarea id="p-desc"></textarea>
                 <div id="map-picker" class="map-container"></div>
-                <input type="hidden" id="selected-coords">
-                <input type="file" id="post-image" accept="image/*">
-                <button onclick="savePost()" class="btn-primary w-100" id="save-btn">Saqlash</button>
+                <input type="file" id="p-img" style="margin-bottom:15px;">
+                <button onclick="saveToFirebase()" class="btn btn-primary" style="width:100%;">Saqlash</button>
             </div>
 
-            <div id="tab-settings" class="tab-content" style="display:none;">
-                <label>Orqa fon rangi:</label>
-                <input type="color" id="bg-color-picker" onchange="changeBg(this.value)">
-                <label>Shrift o'lchami:</label>
-                <select id="font-size-select" onchange="changeFontSize(this.value)">
+            <div id="tab-sec" style="display:none;">
+                <h3>Loginni O'zgartirish</h3><br>
+                <input type="text" id="new-u" placeholder="Yangi login" style="width:100%; padding:10px; margin-bottom:10px;">
+                <input type="password" id="new-p" placeholder="Yangi parol" style="width:100%; padding:10px; margin-bottom:10px;">
+                <button onclick="updateSecurity()" class="btn btn-primary">Yangilash</button>
+            </div>
+
+            <div id="tab-style" style="display:none;">
+                <h3>Interfeys Sozlamalari</h3><br>
+                <label>Fon rangi:</label> <input type="color" onchange="changeBg(this.value)"><br><br>
+                <label>Matn o'lchami:</label>
+                <select onchange="document.body.style.fontSize = this.value">
                     <option value="14px">Kichik</option>
-                    <option value="16px" selected>O'rtacha</option>
+                    <option value="16px" selected>Normal</option>
                     <option value="18px">Katta</option>
                 </select>
-                <label>Stiker o'lchami:</label>
-                <input type="range" min="15" max="50" value="24" onchange="changeIconSize(this.value)">
             </div>
-
-            <div id="tab-security" class="tab-content" style="display:none;">
-                <input type="text" id="new-admin-user" placeholder="Yangi Login">
-                <input type="password" id="new-admin-pass" placeholder="Yangi Parol">
-                <button onclick="updateSecurity()" class="btn-primary w-100">Yangilash</button>
-            </div>
-
-            <div style="margin-top:20px; display:flex; gap:10px;">
-                <button onclick="logout()" class="btn-danger w-100">Chiqish</button>
-                <button onclick="closeModal()" class="btn-secondary w-100">Yopish</button>
-            </div>
+            
+            <button onclick="closeModals()" class="btn" style="margin-top:20px;">Yopish</button>
         </div>
     </div>
 
     <footer>
-        <div class="container footer-content">
-            <img src="<a href="https://ibb.co/7dPPdQQR"><img src="https://i.ibb.co/gLNNLddP/Net-Global-jpg.jpg" alt="Net-Global-jpg" border="0"></a>">
-            <p>© 2026 Mingbuloq IM</p>
-            <div class="creators">
-                <p id="creator-label">Yaratuvchilar:</p>
-                <div class="names-row">
-                    <span>Solijon Muhammadkarimov</span>
-                    <span>Ulug'bek Shuxratullayev</span>
-                    <span>Dilmurod Abduvaxobov</span>
-                </div>
-            </div>
+        <p>© 2026 Mingbuloq IM Portal | NetGlobal Team</p>
+        <div class="names-row">
+            <span>Solijon M.</span> <span>Ulug'bek Sh.</span> <span>Dilmurod A.</span>
         </div>
     </footer>
 
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>AOS.init({ duration: 800 });</script>
-    <script src="script.js"></script>
+    <script>
+        // --- CONFIG ---
+        const firebaseConfig = {
+            apiKey: "AIzaSy...", 
+            authDomain: "mingbulak-ijara.firebaseapp.com",
+            projectId: "mingbulak-ijara",
+            storageBucket: "mingbulak-ijara.appspot.com",
+            messagingSenderId: "999036185534",
+            appId: "1:999036185534:web:112a51eb1dcf76c685a7ef"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let admin = JSON.parse(localStorage.getItem('adm')) || {u: "mystra", p: "mystra2014"};
+
+        // --- INITIALIZE EDITOR ---
+        $('#p-desc').trumbowyg({
+            btns: [
+                ['viewHTML'],
+                ['undo', 'redo'], 
+                ['formatting'],
+                ['strong', 'em', 'del'],
+                ['link'],
+                ['insertImage'],
+                ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
+                ['unorderedList', 'orderedList'],
+                ['horizontalRule'],
+                ['removeformat'],
+                ['fullscreen']
+            ],
+            autogrow: true
+        });
+
+        // --- FUNCTIONS ---
+        function toggleTheme() {
+            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+
+        function openLogin() { document.getElementById('login-modal').style.display = 'flex'; }
+        function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display='none'); }
+
+        function handleLogin() {
+            const u = document.getElementById('adm-user').value;
+            const p = document.getElementById('adm-pass').value;
+            if(u === admin.u && p === admin.p) {
+                document.getElementById('login-modal').style.display='none';
+                document.getElementById('admin-panel').style.display='flex';
+                initMap();
+            } else alert("Xato!");
+        }
+
+        function showTab(name) {
+            document.getElementById('tab-add').style.display = name === 'add' ? 'block' : 'none';
+            document.getElementById('tab-sec').style.display = name === 'sec' ? 'block' : 'none';
+            document.getElementById('tab-style').style.display = name === 'style' ? 'block' : 'none';
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function changeBg(c) { document.body.style.backgroundColor = c; }
+
+        let map, marker;
+        function initMap() {
+            if(map) return;
+            map = L.map('map-picker').setView([40.93, 71.33], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            map.on('click', e => {
+                if(marker) marker.setLatLng(e.latlng);
+                else marker = L.marker(e.latlng).addTo(map);
+            });
+        }
+
+        async function saveToFirebase() {
+            const t = document.getElementById('p-title').value;
+            const d = $('#p-desc').trumbowyg('html'); // Get editor content
+            const img = document.getElementById('p-img').files[0];
+            
+            let b64 = "";
+            if(img) {
+                b64 = await new Promise(r => {
+                    const reader = new FileReader();
+                    reader.onload = e => r(e.target.result);
+                    reader.readAsDataURL(img);
+                });
+            }
+
+            await db.collection("posts").add({
+                title: t,
+                desc: d,
+                image: b64,
+                loc: marker ? marker.getLatLng() : null,
+                date: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            alert("Saqlandi!");
+            location.reload();
+        }
+
+        function render() {
+            db.collection("posts").orderBy("date", "desc").onSnapshot(snap => {
+                const grid = document.getElementById('main-grid');
+                grid.innerHTML = "";
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    grid.innerHTML += `
+                        <div class="card" data-aos="fade-up">
+                            <img src="${data.image || 'https://via.placeholder.com/400'}" class="card-img">
+                            <div class="card-body">
+                                <h3>${data.title}</h3>
+                                <div style="font-size:0.9rem; margin:10px 0;">${data.desc}</div>
+                                <button class="btn btn-primary" style="padding:6px 12px; font-size:0.8rem">Batafsil</button>
+                            </div>
+                        </div>
+                    `;
+                });
+            });
+        }
+
+        window.onload = render;
+        AOS.init();
+    </script>
 </body>
 </html>
