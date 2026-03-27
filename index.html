@@ -1,13 +1,12 @@
 <!DOCTYPE html>
-<html lang="uz" data-theme="light">
+<html lang="uz">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mingbuloq IM | NetGlobal Edition</title>
+    <title>Mingbuloq IM | NetGlobal Premium</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.26.0/ui/trumbowyg.min.css">
@@ -21,95 +20,104 @@
 
     <style>
         :root {
-            --primary: #0078d4;
-            --bg-mica: #f3f3f3;
-            --bg-card: rgba(255, 255, 255, 0.9);
-            --text: #1c1c1c;
-            --border: rgba(0, 0, 0, 0.1);
-            --glass: blur(15px) saturate(150%);
-            --shadow: 0 8px 30px rgba(0,0,0,0.12);
-        }
-
-        [data-theme="dark"] {
-            --bg-mica: #202020;
-            --bg-card: rgba(45, 45, 45, 0.9);
-            --text: #ffffff;
-            --border: rgba(255, 255, 255, 0.1);
+            /* Siz aytgan ko'k va binafsha gradient */
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #581c87 100%);
+            --primary: #6366f1;
+            --glass-card: rgba(255, 255, 255, 0.1);
+            --glass-border: rgba(255, 255, 255, 0.2);
+            --text-light: #f8fafc;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: var(--bg-mica); color: var(--text); transition: 0.3s; }
+        
+        body { 
+            background: var(--bg-gradient); 
+            background-attachment: fixed;
+            color: var(--text-light); 
+            min-height: 100vh;
+            transition: 0.5s;
+        }
+
         .container { width: 90%; max-width: 1200px; margin: auto; }
 
         /* --- NAVBAR --- */
         .navbar {
-            position: sticky; top: 10px; z-index: 1000;
-            backdrop-filter: var(--glass); background: var(--bg-card);
-            border: 1px solid var(--border); border-radius: 12px;
-            padding: 12px 20px; margin: 10px auto; width: 95%; box-shadow: var(--shadow);
+            position: sticky; top: 15px; z-index: 1000;
+            backdrop-filter: blur(20px); 
+            background: rgba(15, 23, 42, 0.6);
+            border: 1px solid var(--glass-border); 
+            border-radius: 16px;
+            padding: 12px 25px; margin: 15px auto; width: 95%;
             display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
         }
         
-        .logo-section { display: flex; align-items: center; gap: 15px; }
-        .school-logos { display: flex; align-items: center; }
+        .logo-section { display: flex; align-items: center; gap: 10px; }
         .circle-logo {
-            width: 40px; height: 40px; border-radius: 50%;
+            width: 42px; height: 42px; border-radius: 50%;
             border: 2px solid var(--primary); object-fit: cover;
-            background: white; margin-right: -10px; box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+            background: white; margin-right: -12px;
+            box-shadow: 4px 0 10px rgba(0,0,0,0.3);
         }
-        .main-logo { font-size: 1.2rem; font-weight: 700; text-decoration: none; color: var(--text); margin-left: 15px; }
+        .main-logo { font-size: 1.4rem; font-weight: 800; color: white; text-decoration: none; margin-left: 15px; }
         .main-logo span { color: var(--primary); }
 
-        .nav-right { display: flex; gap: 10px; }
         .nav-btn {
-            background: transparent; border: none; color: var(--text);
-            width: 40px; height: 40px; border-radius: 8px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
+            background: var(--glass-card); border: 1px solid var(--glass-border); color: white;
+            width: 45px; height: 45px; border-radius: 12px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+            transition: 0.3s;
         }
-        .nav-btn:hover { background: rgba(0,0,0,0.05); }
+        .nav-btn:hover { background: var(--primary); transform: scale(1.1); }
 
         /* --- HERO --- */
-        .hero { padding: 60px 0; text-align: center; }
-        .hero h1 { font-size: 3rem; font-weight: 700; margin-bottom: 10px; }
-        .hero p { opacity: 0.7; margin-bottom: 30px; }
+        .hero { padding: 80px 0 40px; text-align: center; }
+        .hero h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 15px; text-shadow: 0 5px 15px rgba(0,0,0,0.2); }
+        .hero h1 span { background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .hero p { font-size: 1.2rem; opacity: 0.9; margin-bottom: 40px; }
 
-        .btn {
-            padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer;
-            text-decoration: none; display: inline-flex; align-items: center; gap: 8px; border: none;
+        /* --- CARDS (Glassmorphism) --- */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-top: 40px; }
+        .card { 
+            background: var(--glass-card); 
+            backdrop-filter: blur(10px);
+            border-radius: 20px; border: 1px solid var(--glass-border); 
+            overflow: hidden; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         }
-        .btn-primary { background: var(--primary); color: white; }
-        .btn-secondary { background: var(--bg-card); border: 1px solid var(--border); color: var(--text); }
+        .card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .card-img { width: 100%; height: 220px; object-fit: cover; }
+        .card-body { padding: 25px; }
+        .contact-badge { 
+            display: inline-block; padding: 5px 12px; background: rgba(99, 102, 241, 0.2); 
+            border-radius: 8px; font-size: 0.85rem; color: #a5b4fc; margin-top: 15px;
+        }
 
-        /* --- CARDS --- */
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px; }
-        .card { background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; transition: 0.3s; }
-        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
-        .card-img { width: 100%; height: 200px; object-fit: cover; }
-        .card-body { padding: 20px; }
-
-        /* --- MODALS --- */
+        /* --- ADMIN MODAL --- */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;
-            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center;
+            backdrop-filter: blur(15px);
         }
         .modal-content {
-            background: var(--bg-card); padding: 30px; border-radius: 16px;
-            width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow);
+            background: #1e1b4b; padding: 35px; border-radius: 24px;
+            width: 90%; max-width: 850px; border: 1px solid var(--glass-border);
+            max-height: 90vh; overflow-y: auto; color: white;
         }
+        .input-win { 
+            width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--glass-border); 
+            background: rgba(255,255,255,0.05); color: white; margin-bottom: 15px; font-size: 1rem;
+        }
+        .input-win:focus { border-color: var(--primary); outline: none; }
 
-        .input-win { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.02); color: var(--text); margin-bottom: 15px; }
-        
-        /* Wikipedia Editor Style */
-        .trumbowyg-box { border-radius: 8px; margin-bottom: 15px; }
-        
-        .admin-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
-        .tab-btn { padding: 10px; background: none; border: none; color: var(--text); cursor: pointer; opacity: 0.5; }
-        .tab-btn.active { opacity: 1; border-bottom: 2px solid var(--primary); font-weight: bold; }
+        /* Wikipedia Editor Fix */
+        .trumbowyg-box { border-radius: 12px; overflow: hidden; margin-bottom: 15px; border: none !important; }
+        .trumbowyg-editor { background: white !important; color: #1e293b !important; min-height: 200px !important; }
 
-        .map-container { height: 200px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border); }
-        
-        footer { padding: 40px 0; text-align: center; border-top: 1px solid var(--border); margin-top: 50px; }
+        footer { padding: 60px 0; text-align: center; opacity: 0.6; font-size: 0.9rem; }
+
+        .btn { padding: 12px 25px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; transition: 0.3s; text-decoration: none; }
+        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); }
+        .btn-primary:hover { transform: scale(1.05); background: #4f46e5; }
     </style>
 </head>
 <body>
@@ -117,25 +125,21 @@
     <nav class="navbar">
         <div class="logo-section">
             <div class="school-logos">
-                <img src="https://i.ibb.co/vz6W7M2/netglobal-logo.png" class="circle-logo" alt="L1">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqYF7lOa6xR5mG7p5Zp9zQ" class="circle-logo" alt="L2" style="margin-left: -15px;">
+                <img src="https://i.ibb.co/vz6W7M2/netglobal-logo.png" class="circle-logo">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqYF7lOa6xR5mG7p5Zp9zQ" class="circle-logo">
             </div>
             <a href="#" class="main-logo">Mingbuloq<span>IM</span></a>
         </div>
         <div class="nav-right">
-            <button onclick="toggleTheme()" class="nav-btn"><i class="fas fa-circle-half-stroke"></i></button>
-            <button onclick="openLogin()" class="nav-btn"><i class="fas fa-user-gear"></i></button>
+            <button onclick="openLogin()" class="nav-btn"><i class="fas fa-user-shield"></i></button>
         </div>
     </nav>
 
     <header class="hero">
         <div class="container">
             <h1>Aqlli <span>Ijara</span> Portali</h1>
-            <p>Ixtisoslashtirilgan maktablar uchun maxsus platforma.</p>
-            <div style="display: flex; gap: 10px; justify-content: center;">
-                <a href="#main-grid" class="btn btn-primary">E'lonlar</a>
-                <a href="#" class="btn btn-secondary">Biz haqimizda</a>
-            </div>
+            <p>Ixtisoslashtirilgan maktablar uchun Windows 11 Fluent dizaynidagi platforma.</p>
+            <a href="#main-grid" class="btn btn-primary"><i class="fas fa-layer-group"></i> E'lonlarni ko'rish</a>
         </div>
     </header>
 
@@ -145,58 +149,51 @@
     </main>
 
     <div id="login-modal" class="modal">
-        <div class="modal-content" style="max-width: 400px;">
-            <h3>Admin Kirish</h3><br>
-            <input type="text" id="adm-u" class="input-win" placeholder="Login">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <i class="fas fa-user-lock fa-3x" style="color: var(--primary); margin-bottom: 20px;"></i>
+            <h3>Admin Boshqaruvi</h3><br>
+            <input type="text" id="adm-u" class="input-win" placeholder="Admin Login">
             <input type="password" id="adm-p" class="input-win" placeholder="Parol">
             <button onclick="handleLogin()" class="btn btn-primary" style="width:100%">Kirish</button>
-            <button onclick="closeModals()" class="btn btn-secondary" style="width:100%; margin-top:10px;">Yopish</button>
+            <button onclick="closeModals()" class="btn" style="color: white; margin-top: 15px; background: none;">Yopish</button>
         </div>
     </div>
 
     <div id="admin-panel" class="modal">
         <div class="modal-content">
-            <div class="admin-tabs">
-                <button onclick="showTab('add')" id="btn-add" class="tab-btn active">E'lon Qo'shish</button>
-                <button onclick="showTab('style')" id="btn-style" class="tab-btn">Dizayn</button>
-                <button onclick="showTab('sec')" id="btn-sec" class="tab-btn">Xavfsizlik</button>
+            <h2 style="margin-bottom: 25px;"><i class="fas fa-plus-circle"></i> Yangi e'lon qo'shish</h2>
+            
+            <input type="text" id="p-title" class="input-win" placeholder="E'lon sarlavhasi (masalan: 2 xonali uy ijaraga beriladi)">
+            
+            <label style="display: block; margin-bottom: 10px; opacity: 0.8;">Batafsil ma'lumot (Wikipedia uslubida):</label>
+            <textarea id="p-desc"></textarea>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                <input type="text" id="p-phone" class="input-win" placeholder="Telefon raqam (masalan: +998 90 ...)">
+                <input type="text" id="p-tg" class="input-win" placeholder="Telegram username (masalan: @username)">
             </div>
 
-            <div id="tab-add">
-                <input type="text" id="p-title" class="input-win" placeholder="Sarlavha">
-                <textarea id="p-desc"></textarea> <div id="map-picker" class="map-container"></div>
-                <input type="file" id="p-img" style="margin-bottom: 20px;">
-                <button onclick="saveData()" class="btn btn-primary" style="width:100%">Saqlash</button>
-            </div>
+            <div id="map-picker" style="height: 200px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--glass-border);"></div>
+            
+            <label>Rasm yuklash:</label><br>
+            <input type="file" id="p-img" style="margin: 15px 0;"><br>
 
-            <div id="tab-style" style="display:none;">
-                <label>Fon rangi:</label> <input type="color" onchange="document.body.style.backgroundColor = this.value"><br><br>
-                <label>Shrift o'lchami:</label>
-                <select class="input-win" onchange="document.body.style.fontSize = this.value">
-                    <option value="14px">Kichik</option>
-                    <option value="16px" selected>Normal</option>
-                    <option value="18px">Katta</option>
-                </select>
+            <div style="display: flex; gap: 10px;">
+                <button onclick="saveData()" class="btn btn-primary" style="flex: 2;">E'lonni saytga chiqarish</button>
+                <button onclick="closeModals()" class="btn" style="background: #ef4444; color: white; flex: 1;">Bekor qilish</button>
             </div>
-
-            <div id="tab-sec" style="display:none;">
-                <input type="text" id="new-u" class="input-win" placeholder="Yangi login">
-                <input type="password" id="new-p" class="input-win" placeholder="Yangi parol">
-                <button onclick="updateAdmin()" class="btn btn-primary">Yangilash</button>
-            </div>
-
-            <button onclick="closeModals()" class="btn btn-secondary" style="margin-top:20px;">Yopish</button>
         </div>
     </div>
 
     <footer>
-        <p>© 2026 NetGlobal Team: Solijon, Ulug'bek, Dilmurod</p>
+        <p>© 2026 Mingbuloq IM Portal | NetGlobal Team</p>
+        <p style="margin-top: 10px; font-weight: 600; color: var(--primary);">Solijon, Ulug'bek, Dilmurod</p>
     </footer>
 
     <script>
-        // FIREBASE
+        // --- FIREBASE SOZLAMALARI ---
         const firebaseConfig = {
-            apiKey: "AIzaSy...", // O'zingiznikini qo'ying
+            apiKey: "AIzaSy...", 
             authDomain: "mingbulak-ijara.firebaseapp.com",
             projectId: "mingbulak-ijara",
             storageBucket: "mingbulak-ijara.appspot.com",
@@ -206,16 +203,10 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        let adminData = JSON.parse(localStorage.getItem('adm')) || {u: "mystra", p: "mystra2014"};
+        let admin = JSON.parse(localStorage.getItem('adm')) || {u: "mystra", p: "mystra2014"};
 
-        // EDITOR (Wikipedia style)
+        // Wikipedia editorini yoqish
         $('#p-desc').trumbowyg();
-
-        // FUNCTIONS
-        function toggleTheme() {
-            const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', t);
-        }
 
         function openLogin() { document.getElementById('login-modal').style.display = 'flex'; }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display='none'); }
@@ -223,29 +214,11 @@
         function handleLogin() {
             const u = document.getElementById('adm-u').value;
             const p = document.getElementById('adm-p').value;
-            if(u === adminData.u && p === adminData.p) {
+            if(u === admin.u && p === admin.p) {
                 document.getElementById('login-modal').style.display='none';
                 document.getElementById('admin-panel').style.display='flex';
                 initMap();
-            } else alert("Xato!");
-        }
-
-        function showTab(name) {
-            document.getElementById('tab-add').style.display = name === 'add' ? 'block' : 'none';
-            document.getElementById('tab-style').style.display = name === 'style' ? 'block' : 'none';
-            document.getElementById('tab-sec').style.display = name === 'sec' ? 'block' : 'none';
-            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById('btn-' + name).classList.add('active');
-        }
-
-        function updateAdmin() {
-            const u = document.getElementById('new-u').value;
-            const p = document.getElementById('new-p').value;
-            if(u && p) {
-                adminData = {u, p};
-                localStorage.setItem('adm', JSON.stringify(adminData));
-                alert("Yangilandi!");
-            }
+            } else alert("Xato login yoki parol!");
         }
 
         let map, marker;
@@ -262,17 +235,26 @@
         async function saveData() {
             const t = document.getElementById('p-title').value;
             const d = $('#p-desc').trumbowyg('html');
+            const ph = document.getElementById('p-phone').value;
+            const tg = document.getElementById('p-tg').value;
             const img = document.getElementById('p-img').files[0];
+
+            if(!t || !ph) return alert("Sarlavha va telefon raqam shart!");
+
             let b64 = "";
             if(img) {
                 b64 = await new Promise(r => {
-                    const reader = new FileReader();
-                    reader.onload = e => r(e.target.result);
-                    reader.readAsDataURL(img);
+                    const fr = new FileReader();
+                    fr.onload = e => r(e.target.result);
+                    fr.readAsDataURL(img);
                 });
             }
-            await db.collection("posts").add({ title: t, desc: d, image: b64, time: new Date() });
-            alert("Saqlandi!");
+
+            await db.collection("posts").add({
+                title: t, desc: d, phone: ph, telegram: tg,
+                image: b64, time: new Date()
+            });
+            alert("E'lon muvaffaqiyatli qo'shildi!");
             location.reload();
         }
 
@@ -284,10 +266,14 @@
                     const data = doc.data();
                     grid.innerHTML += `
                         <div class="card">
-                            <img src="${data.image || 'https://via.placeholder.com/400'}" class="card-img">
+                            <img src="${data.image || 'https://via.placeholder.com/400x250/1e1b4b/ffffff?text=Rasm+yoq'}" class="card-img">
                             <div class="card-body">
-                                <h3>${data.title}</h3>
-                                <div style="margin-top:10px">${data.desc}</div>
+                                <h3 style="margin-bottom:10px">${data.title}</h3>
+                                <div style="font-size:0.9rem; opacity:0.8; height:60px; overflow:hidden;">${data.desc}</div>
+                                <div class="contact-badge">
+                                    <i class="fas fa-phone"></i> ${data.phone}
+                                    ${data.telegram ? ` | <i class="fab fa-telegram"></i> ${data.telegram}` : ''}
+                                </div>
                             </div>
                         </div>`;
                 });
