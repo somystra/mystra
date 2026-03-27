@@ -22,129 +22,119 @@
     <style>
         :root {
             --primary: #0078d4;
-            --primary-hover: #005a9e;
             --bg-mica: #f3f3f3;
-            --bg-card: rgba(255, 255, 255, 0.8);
+            --bg-card: rgba(255, 255, 255, 0.9);
             --text: #1c1c1c;
             --border: rgba(0, 0, 0, 0.1);
-            --glass: blur(20px) saturate(180%);
-            --shadow: 0 8px 16px rgba(0,0,0,0.08);
-            --ease-win: cubic-bezier(0.22, 1, 0.36, 1);
+            --glass: blur(15px) saturate(150%);
+            --shadow: 0 8px 30px rgba(0,0,0,0.12);
         }
 
         [data-theme="dark"] {
             --bg-mica: #202020;
-            --bg-card: rgba(45, 45, 45, 0.8);
+            --bg-card: rgba(45, 45, 45, 0.9);
             --text: #ffffff;
             --border: rgba(255, 255, 255, 0.1);
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: var(--bg-mica); color: var(--text); transition: 0.4s var(--ease-win); }
-        .container { width: 92%; max-width: 1200px; margin: auto; }
+        body { background-color: var(--bg-mica); color: var(--text); transition: 0.3s; }
+        .container { width: 90%; max-width: 1200px; margin: auto; }
 
         /* --- NAVBAR --- */
         .navbar {
             position: sticky; top: 10px; z-index: 1000;
             backdrop-filter: var(--glass); background: var(--bg-card);
             border: 1px solid var(--border); border-radius: 12px;
-            padding: 12px 0; margin: 10px auto; width: 95%; box-shadow: var(--shadow);
+            padding: 12px 20px; margin: 10px auto; width: 95%; box-shadow: var(--shadow);
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .nav-content { display: flex; justify-content: space-between; align-items: center; }
-        .logo-section { display: flex; align-items: center; gap: 12px; }
         
+        .logo-section { display: flex; align-items: center; gap: 15px; }
         .school-logos { display: flex; align-items: center; }
-        .school-logo {
-            width: 38px; height: 38px; border-radius: 50%;
-            border: 2px solid white; object-fit: cover;
-            margin-right: -10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        .circle-logo {
+            width: 40px; height: 40px; border-radius: 50%;
+            border: 2px solid var(--primary); object-fit: cover;
+            background: white; margin-right: -10px; box-shadow: 2px 0 5px rgba(0,0,0,0.1);
         }
+        .main-logo { font-size: 1.2rem; font-weight: 700; text-decoration: none; color: var(--text); margin-left: 15px; }
+        .main-logo span { color: var(--primary); }
 
         .nav-right { display: flex; gap: 10px; }
         .nav-btn {
             background: transparent; border: none; color: var(--text);
             width: 40px; height: 40px; border-radius: 8px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; transition: 0.2s;
+            display: flex; align-items: center; justify-content: center; font-size: 1.1rem;
         }
         .nav-btn:hover { background: rgba(0,0,0,0.05); }
 
         /* --- HERO --- */
-        .hero { padding: 80px 0; text-align: center; }
-        .hero h1 { font-size: 3.2rem; font-weight: 700; margin-bottom: 15px; }
-        .hero h1 span { color: var(--primary); }
-        .hero p { opacity: 0.8; margin-bottom: 35px; }
+        .hero { padding: 60px 0; text-align: center; }
+        .hero h1 { font-size: 3rem; font-weight: 700; margin-bottom: 10px; }
+        .hero p { opacity: 0.7; margin-bottom: 30px; }
 
         .btn {
-            padding: 12px 25px; border-radius: 8px; font-weight: 600;
-            cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;
-            transition: 0.2s var(--ease-win); border: 1px solid transparent;
+            padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer;
+            text-decoration: none; display: inline-flex; align-items: center; gap: 8px; border: none;
         }
         .btn-primary { background: var(--primary); color: white; }
-        .btn-primary:hover { background: var(--primary-hover); transform: translateY(-2px); }
-        .btn-secondary { background: var(--bg-card); color: var(--text); border-color: var(--border); }
+        .btn-secondary { background: var(--bg-card); border: 1px solid var(--border); color: var(--text); }
 
         /* --- CARDS --- */
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 25px; margin-top: 30px; }
-        .card {
-            background: var(--bg-card); backdrop-filter: var(--glass);
-            border: 1px solid var(--border); border-radius: 12px;
-            overflow: hidden; transition: 0.3s var(--ease-win);
-        }
-        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow); border-color: var(--primary); }
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-top: 30px; }
+        .card { background: var(--bg-card); border-radius: 12px; border: 1px solid var(--border); overflow: hidden; transition: 0.3s; }
+        .card:hover { transform: translateY(-5px); box-shadow: var(--shadow); }
         .card-img { width: 100%; height: 200px; object-fit: cover; }
         .card-body { padding: 20px; }
 
-        /* --- ADMIN & EDITOR --- */
+        /* --- MODALS --- */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.4); z-index: 2000; justify-content: center; align-items: center;
-            backdrop-filter: blur(8px);
+            background: rgba(0,0,0,0.5); z-index: 2000; justify-content: center; align-items: center;
+            backdrop-filter: blur(10px);
         }
         .modal-content {
             background: var(--bg-card); padding: 30px; border-radius: 16px;
-            width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto;
-            border: 1px solid var(--border); box-shadow: var(--shadow);
+            width: 90%; max-width: 800px; max-height: 90vh; overflow-y: auto; box-shadow: var(--shadow);
         }
 
-        /* Wikipedia Style Editor Overrides */
-        .trumbowyg-box { border-radius: 8px; border: 1px solid var(--border) !important; }
-        .trumbowyg-editor { min-height: 200px !important; background: white !important; color: black !important; }
-        [data-theme="dark"] .trumbowyg-editor { background: #2d2d2d !important; color: white !important; }
-
+        .input-win { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: rgba(0,0,0,0.02); color: var(--text); margin-bottom: 15px; }
+        
+        /* Wikipedia Editor Style */
+        .trumbowyg-box { border-radius: 8px; margin-bottom: 15px; }
+        
         .admin-tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
-        .tab-btn { padding: 10px 20px; background: none; border: none; color: var(--text); cursor: pointer; opacity: 0.6; }
+        .tab-btn { padding: 10px; background: none; border: none; color: var(--text); cursor: pointer; opacity: 0.5; }
         .tab-btn.active { opacity: 1; border-bottom: 2px solid var(--primary); font-weight: bold; }
 
-        .map-container { height: 250px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border); }
-
+        .map-container { height: 200px; border-radius: 8px; margin-bottom: 15px; border: 1px solid var(--border); }
+        
         footer { padding: 40px 0; text-align: center; border-top: 1px solid var(--border); margin-top: 50px; }
     </style>
 </head>
 <body>
 
-    <nav class="navbar" data-aos="fade-down">
-        <div class="container nav-content">
-            <div class="logo-section">
-                <div class="school-logos">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqYF7lOa6xR5mG7p5Zp9zQ" class="school-logo">
-                    <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR_x-W5_f5-G5z9A" class="school-logo">
-                </div>
-                <h2 style="font-size: 1.2rem; font-weight: 700;">Mingbuloq<span>IM</span></h2>
+    <nav class="navbar">
+        <div class="logo-section">
+            <div class="school-logos">
+                <img src="https://i.ibb.co/vz6W7M2/netglobal-logo.png" class="circle-logo" alt="L1">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqYF7lOa6xR5mG7p5Zp9zQ" class="circle-logo" alt="L2" style="margin-left: -15px;">
             </div>
-            <div class="nav-right">
-                <button onclick="toggleTheme()" class="nav-btn"><i class="fas fa-moon"></i></button>
-                <button onclick="openLogin()" class="nav-btn"><i class="fas fa-lock"></i></button>
-            </div>
+            <a href="#" class="main-logo">Mingbuloq<span>IM</span></a>
+        </div>
+        <div class="nav-right">
+            <button onclick="toggleTheme()" class="nav-btn"><i class="fas fa-circle-half-stroke"></i></button>
+            <button onclick="openLogin()" class="nav-btn"><i class="fas fa-user-gear"></i></button>
         </div>
     </nav>
 
     <header class="hero">
         <div class="container">
-            <h1 data-aos="zoom-in">Ixtisoslashtirilgan Maktab <br><span>Smart Portali</span></h1>
-            <p>NetGlobal Team tomonidan taqdim etilgan zamonaviy ijara platformasi.</p>
-            <div class="hero-actions">
-                <a href="#main-grid" class="btn btn-primary">E'lonlarni ko'rish</a>
-                <a href="https://t.me/your_bot" class="btn btn-secondary"><i class="fab fa-telegram"></i> Botga o'tish</a>
+            <h1>Aqlli <span>Ijara</span> Portali</h1>
+            <p>Ixtisoslashtirilgan maktablar uchun maxsus platforma.</p>
+            <div style="display: flex; gap: 10px; justify-content: center;">
+                <a href="#main-grid" class="btn btn-primary">E'lonlar</a>
+                <a href="#" class="btn btn-secondary">Biz haqimizda</a>
             </div>
         </div>
     </header>
@@ -157,62 +147,56 @@
     <div id="login-modal" class="modal">
         <div class="modal-content" style="max-width: 400px;">
             <h3>Admin Kirish</h3><br>
-            <input type="text" id="adm-user" placeholder="Login" style="width:100%; padding:10px; margin-bottom:10px;">
-            <input type="password" id="adm-pass" placeholder="Parol" style="width:100%; padding:10px; margin-bottom:20px;">
-            <button onclick="handleLogin()" class="btn btn-primary" style="width:100%;">Kirish</button>
-            <button onclick="closeModals()" class="btn" style="width:100%; margin-top:10px;">Yopish</button>
+            <input type="text" id="adm-u" class="input-win" placeholder="Login">
+            <input type="password" id="adm-p" class="input-win" placeholder="Parol">
+            <button onclick="handleLogin()" class="btn btn-primary" style="width:100%">Kirish</button>
+            <button onclick="closeModals()" class="btn btn-secondary" style="width:100%; margin-top:10px;">Yopish</button>
         </div>
     </div>
 
     <div id="admin-panel" class="modal">
         <div class="modal-content">
             <div class="admin-tabs">
-                <button onclick="showTab('add')" class="tab-btn active">E'lon Qo'shish</button>
-                <button onclick="showTab('sec')" class="tab-btn">Xavfsizlik</button>
-                <button onclick="showTab('style')" class="tab-btn">Dizayn</button>
+                <button onclick="showTab('add')" id="btn-add" class="tab-btn active">E'lon Qo'shish</button>
+                <button onclick="showTab('style')" id="btn-style" class="tab-btn">Dizayn</button>
+                <button onclick="showTab('sec')" id="btn-sec" class="tab-btn">Xavfsizlik</button>
             </div>
 
             <div id="tab-add">
-                <input type="text" id="p-title" placeholder="Sarlavha" style="width:100%; padding:12px; margin-bottom:15px; border-radius:8px; border:1px solid var(--border);">
-                <textarea id="p-desc"></textarea>
-                <div id="map-picker" class="map-container"></div>
-                <input type="file" id="p-img" style="margin-bottom:15px;">
-                <button onclick="saveToFirebase()" class="btn btn-primary" style="width:100%;">Saqlash</button>
-            </div>
-
-            <div id="tab-sec" style="display:none;">
-                <h3>Loginni O'zgartirish</h3><br>
-                <input type="text" id="new-u" placeholder="Yangi login" style="width:100%; padding:10px; margin-bottom:10px;">
-                <input type="password" id="new-p" placeholder="Yangi parol" style="width:100%; padding:10px; margin-bottom:10px;">
-                <button onclick="updateSecurity()" class="btn btn-primary">Yangilash</button>
+                <input type="text" id="p-title" class="input-win" placeholder="Sarlavha">
+                <textarea id="p-desc"></textarea> <div id="map-picker" class="map-container"></div>
+                <input type="file" id="p-img" style="margin-bottom: 20px;">
+                <button onclick="saveData()" class="btn btn-primary" style="width:100%">Saqlash</button>
             </div>
 
             <div id="tab-style" style="display:none;">
-                <h3>Interfeys Sozlamalari</h3><br>
-                <label>Fon rangi:</label> <input type="color" onchange="changeBg(this.value)"><br><br>
-                <label>Matn o'lchami:</label>
-                <select onchange="document.body.style.fontSize = this.value">
+                <label>Fon rangi:</label> <input type="color" onchange="document.body.style.backgroundColor = this.value"><br><br>
+                <label>Shrift o'lchami:</label>
+                <select class="input-win" onchange="document.body.style.fontSize = this.value">
                     <option value="14px">Kichik</option>
                     <option value="16px" selected>Normal</option>
                     <option value="18px">Katta</option>
                 </select>
             </div>
-            
-            <button onclick="closeModals()" class="btn" style="margin-top:20px;">Yopish</button>
+
+            <div id="tab-sec" style="display:none;">
+                <input type="text" id="new-u" class="input-win" placeholder="Yangi login">
+                <input type="password" id="new-p" class="input-win" placeholder="Yangi parol">
+                <button onclick="updateAdmin()" class="btn btn-primary">Yangilash</button>
+            </div>
+
+            <button onclick="closeModals()" class="btn btn-secondary" style="margin-top:20px;">Yopish</button>
         </div>
     </div>
 
     <footer>
-        <p>© 2026 Mingbuloq IM Portal | NetGlobal Team</p>
-        <div class="names-row">
-            <span>Solijon M.</span> <span>Ulug'bek Sh.</span> <span>Dilmurod A.</span>
-        </div>
+        <p>© 2026 NetGlobal Team: Solijon, Ulug'bek, Dilmurod</p>
     </footer>
 
     <script>
-        // --- CONFIG ---
+        // FIREBASE
         const firebaseConfig = {
-            apiKey: "AIzaSy...", 
+            apiKey: "AIzaSy...", // O'zingiznikini qo'ying
             authDomain: "mingbulak-ijara.firebaseapp.com",
             projectId: "mingbulak-ijara",
             storageBucket: "mingbulak-ijara.appspot.com",
@@ -222,39 +206,24 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        let admin = JSON.parse(localStorage.getItem('adm')) || {u: "mystra", p: "mystra2014"};
+        let adminData = JSON.parse(localStorage.getItem('adm')) || {u: "mystra", p: "mystra2014"};
 
-        // --- INITIALIZE EDITOR ---
-        $('#p-desc').trumbowyg({
-            btns: [
-                ['viewHTML'],
-                ['undo', 'redo'], 
-                ['formatting'],
-                ['strong', 'em', 'del'],
-                ['link'],
-                ['insertImage'],
-                ['justifyLeft', 'justifyCenter', 'justifyRight', 'justifyFull'],
-                ['unorderedList', 'orderedList'],
-                ['horizontalRule'],
-                ['removeformat'],
-                ['fullscreen']
-            ],
-            autogrow: true
-        });
+        // EDITOR (Wikipedia style)
+        $('#p-desc').trumbowyg();
 
-        // --- FUNCTIONS ---
+        // FUNCTIONS
         function toggleTheme() {
-            const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', theme);
+            const t = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', t);
         }
 
         function openLogin() { document.getElementById('login-modal').style.display = 'flex'; }
         function closeModals() { document.querySelectorAll('.modal').forEach(m => m.style.display='none'); }
 
         function handleLogin() {
-            const u = document.getElementById('adm-user').value;
-            const p = document.getElementById('adm-pass').value;
-            if(u === admin.u && p === admin.p) {
+            const u = document.getElementById('adm-u').value;
+            const p = document.getElementById('adm-p').value;
+            if(u === adminData.u && p === adminData.p) {
                 document.getElementById('login-modal').style.display='none';
                 document.getElementById('admin-panel').style.display='flex';
                 initMap();
@@ -263,13 +232,21 @@
 
         function showTab(name) {
             document.getElementById('tab-add').style.display = name === 'add' ? 'block' : 'none';
-            document.getElementById('tab-sec').style.display = name === 'sec' ? 'block' : 'none';
             document.getElementById('tab-style').style.display = name === 'style' ? 'block' : 'none';
+            document.getElementById('tab-sec').style.display = name === 'sec' ? 'block' : 'none';
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            event.target.classList.add('active');
+            document.getElementById('btn-' + name).classList.add('active');
         }
 
-        function changeBg(c) { document.body.style.backgroundColor = c; }
+        function updateAdmin() {
+            const u = document.getElementById('new-u').value;
+            const p = document.getElementById('new-p').value;
+            if(u && p) {
+                adminData = {u, p};
+                localStorage.setItem('adm', JSON.stringify(adminData));
+                alert("Yangilandi!");
+            }
+        }
 
         let map, marker;
         function initMap() {
@@ -282,11 +259,10 @@
             });
         }
 
-        async function saveToFirebase() {
+        async function saveData() {
             const t = document.getElementById('p-title').value;
-            const d = $('#p-desc').trumbowyg('html'); // Get editor content
+            const d = $('#p-desc').trumbowyg('html');
             const img = document.getElementById('p-img').files[0];
-            
             let b64 = "";
             if(img) {
                 b64 = await new Promise(r => {
@@ -295,40 +271,29 @@
                     reader.readAsDataURL(img);
                 });
             }
-
-            await db.collection("posts").add({
-                title: t,
-                desc: d,
-                image: b64,
-                loc: marker ? marker.getLatLng() : null,
-                date: firebase.firestore.FieldValue.serverTimestamp()
-            });
+            await db.collection("posts").add({ title: t, desc: d, image: b64, time: new Date() });
             alert("Saqlandi!");
             location.reload();
         }
 
         function render() {
-            db.collection("posts").orderBy("date", "desc").onSnapshot(snap => {
+            db.collection("posts").orderBy("time", "desc").onSnapshot(snap => {
                 const grid = document.getElementById('main-grid');
                 grid.innerHTML = "";
                 snap.forEach(doc => {
                     const data = doc.data();
                     grid.innerHTML += `
-                        <div class="card" data-aos="fade-up">
+                        <div class="card">
                             <img src="${data.image || 'https://via.placeholder.com/400'}" class="card-img">
                             <div class="card-body">
                                 <h3>${data.title}</h3>
-                                <div style="font-size:0.9rem; margin:10px 0;">${data.desc}</div>
-                                <button class="btn btn-primary" style="padding:6px 12px; font-size:0.8rem">Batafsil</button>
+                                <div style="margin-top:10px">${data.desc}</div>
                             </div>
-                        </div>
-                    `;
+                        </div>`;
                 });
             });
         }
-
         window.onload = render;
-        AOS.init();
     </script>
 </body>
 </html>
