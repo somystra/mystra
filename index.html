@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mingbuloq IM | NetGlobal Premium</title>
+    <title>Mingbuloq tumani ixtisoslashtirilgan maktabi | Raqamli Portal</title>
     
-    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     
@@ -20,104 +20,101 @@
 
     <style>
         :root {
-            /* Siz aytgan ko'k va binafsha gradient */
-            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #581c87 100%);
-            --primary: #6366f1;
-            --glass-card: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --text-light: #f8fafc;
+            /* Rahbariyat uchun jiddiy ko'k va chuqur binafsha ranglar */
+            --bg-main: linear-gradient(135deg, #020617 0%, #1e1b4b 100%);
+            --accent: #4f46e5;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #f8fafc;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
         
         body { 
-            background: var(--bg-gradient); 
+            background: var(--bg-main); 
             background-attachment: fixed;
-            color: var(--text-light); 
+            color: var(--text); 
             min-height: 100vh;
-            transition: 0.5s;
         }
 
         .container { width: 90%; max-width: 1200px; margin: auto; }
 
-        /* --- NAVBAR --- */
+        /* --- RASMIY NAVBAR --- */
         .navbar {
             position: sticky; top: 15px; z-index: 1000;
             backdrop-filter: blur(20px); 
-            background: rgba(15, 23, 42, 0.6);
-            border: 1px solid var(--glass-border); 
-            border-radius: 16px;
-            padding: 12px 25px; margin: 15px auto; width: 95%;
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid var(--border); 
+            border-radius: 12px;
+            padding: 10px 25px; margin: 15px auto; width: 95%;
             display: flex; justify-content: space-between; align-items: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         
-        .logo-section { display: flex; align-items: center; gap: 10px; }
+        .logo-section { display: flex; align-items: center; gap: 15px; }
+        .school-logos { display: flex; align-items: center; }
         .circle-logo {
-            width: 42px; height: 42px; border-radius: 50%;
-            border: 2px solid var(--primary); object-fit: cover;
+            width: 45px; height: 45px; border-radius: 50%;
+            border: 2px solid var(--accent); object-fit: cover;
             background: white; margin-right: -12px;
-            box-shadow: 4px 0 10px rgba(0,0,0,0.3);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
         }
-        .main-logo { font-size: 1.4rem; font-weight: 800; color: white; text-decoration: none; margin-left: 15px; }
-        .main-logo span { color: var(--primary); }
+        .brand-name { font-size: 1.1rem; font-weight: 700; color: white; margin-left: 20px; line-height: 1.2; }
+        .brand-name span { display: block; font-size: 0.75rem; font-weight: 400; opacity: 0.7; }
 
-        .nav-btn {
-            background: var(--glass-card); border: 1px solid var(--glass-border); color: white;
-            width: 45px; height: 45px; border-radius: 12px; cursor: pointer;
-            display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
-            transition: 0.3s;
+        .admin-trigger {
+            background: var(--glass); border: 1px solid var(--border); color: white;
+            padding: 8px 15px; border-radius: 8px; cursor: pointer;
+            transition: 0.3s; font-size: 0.9rem; display: flex; align-items: center; gap: 8px;
         }
-        .nav-btn:hover { background: var(--primary); transform: scale(1.1); }
+        .admin-trigger:hover { background: var(--accent); }
 
-        /* --- HERO --- */
-        .hero { padding: 80px 0 40px; text-align: center; }
-        .hero h1 { font-size: 3.5rem; font-weight: 800; margin-bottom: 15px; text-shadow: 0 5px 15px rgba(0,0,0,0.2); }
-        .hero h1 span { background: linear-gradient(to right, #818cf8, #c084fc); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .hero p { font-size: 1.2rem; opacity: 0.9; margin-bottom: 40px; }
+        /* --- RASMIY HEADER --- */
+        .hero { padding: 70px 0 50px; text-align: center; }
+        .hero h1 { font-size: 2.8rem; font-weight: 800; margin-bottom: 15px; letter-spacing: -1px; }
+        .hero h1 span { color: #818cf8; }
+        .hero p { font-size: 1.1rem; opacity: 0.8; max-width: 700px; margin: 0 auto 35px; line-height: 1.6; }
 
-        /* --- CARDS (Glassmorphism) --- */
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-top: 40px; }
+        /* --- KARTALAR (Professional ko'rinish) --- */
+        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
         .card { 
-            background: var(--glass-card); 
+            background: rgba(255, 255, 255, 0.03); 
             backdrop-filter: blur(10px);
-            border-radius: 20px; border: 1px solid var(--glass-border); 
-            overflow: hidden; transition: 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            border-radius: 16px; border: 1px solid var(--border); 
+            overflow: hidden; transition: 0.3s;
         }
-        .card:hover { transform: translateY(-10px); border-color: var(--primary); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-        .card-img { width: 100%; height: 220px; object-fit: cover; }
-        .card-body { padding: 25px; }
-        .contact-badge { 
-            display: inline-block; padding: 5px 12px; background: rgba(99, 102, 241, 0.2); 
-            border-radius: 8px; font-size: 0.85rem; color: #a5b4fc; margin-top: 15px;
+        .card:hover { transform: translateY(-8px); border-color: var(--accent); background: rgba(255, 255, 255, 0.06); }
+        .card-img { width: 100%; height: 210px; object-fit: cover; filter: brightness(0.9); }
+        .card-body { padding: 20px; }
+        .contact-info { 
+            display: flex; gap: 10px; margin-top: 15px; font-size: 0.85rem; 
+            padding-top: 15px; border-top: 1px solid var(--border);
         }
+        .badge { background: var(--accent); padding: 4px 10px; border-radius: 6px; color: white; }
 
-        /* --- ADMIN MODAL --- */
+        /* --- ADMIN PANEL (Dialog uslubida) --- */
         .modal {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center;
-            backdrop-filter: blur(15px);
+            background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center;
+            backdrop-filter: blur(10px);
         }
         .modal-content {
-            background: #1e1b4b; padding: 35px; border-radius: 24px;
-            width: 90%; max-width: 850px; border: 1px solid var(--glass-border);
-            max-height: 90vh; overflow-y: auto; color: white;
+            background: #0f172a; padding: 35px; border-radius: 20px;
+            width: 90%; max-width: 800px; border: 1px solid var(--border);
+            max-height: 90vh; overflow-y: auto;
         }
-        .input-win { 
-            width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--glass-border); 
-            background: rgba(255,255,255,0.05); color: white; margin-bottom: 15px; font-size: 1rem;
+        .input-field { 
+            width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); 
+            background: rgba(255,255,255,0.05); color: white; margin-bottom: 15px;
         }
-        .input-win:focus { border-color: var(--primary); outline: none; }
+        
+        .trumbowyg-box { border-radius: 8px; overflow: hidden; margin-bottom: 15px; }
+        .trumbowyg-editor { background: #f8fafc !important; color: #0f172a !important; }
 
-        /* Wikipedia Editor Fix */
-        .trumbowyg-box { border-radius: 12px; overflow: hidden; margin-bottom: 15px; border: none !important; }
-        .trumbowyg-editor { background: white !important; color: #1e293b !important; min-height: 200px !important; }
+        footer { padding: 50px 0; text-align: center; border-top: 1px solid var(--border); margin-top: 60px; opacity: 0.6; }
 
-        footer { padding: 60px 0; text-align: center; opacity: 0.6; font-size: 0.9rem; }
-
-        .btn { padding: 12px 25px; border-radius: 12px; font-weight: 700; cursor: pointer; border: none; transition: 0.3s; text-decoration: none; }
-        .btn-primary { background: var(--primary); color: white; box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4); }
-        .btn-primary:hover { transform: scale(1.05); background: #4f46e5; }
+        .btn { padding: 12px 25px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; transition: 0.3s; text-decoration: none; }
+        .btn-main { background: var(--accent); color: white; }
     </style>
 </head>
 <body>
@@ -125,21 +122,24 @@
     <nav class="navbar">
         <div class="logo-section">
             <div class="school-logos">
-                <img src="https://i.ibb.co/vz6W7M2/netglobal-logo.png" class="circle-logo">
-                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqYF7lOa6xR5mG7p5Zp9zQ" class="circle-logo">
+                <img src="https://i.ibb.co/vz6W7M2/netglobal-logo.png" class="circle-logo" alt="Logo 1">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqYF7lOa6xR5mG7p5Zp9zQ" class="circle-logo" alt="Logo 2">
             </div>
-            <a href="#" class="main-logo">Mingbuloq<span>IM</span></a>
+            <div class="brand-name">
+                Mingbuloq tumani IM
+                <span>Ixtisoslashtirilgan ta'lim muassasalari agentligi tizimida</span>
+            </div>
         </div>
         <div class="nav-right">
-            <button onclick="openLogin()" class="nav-btn"><i class="fas fa-user-shield"></i></button>
+            <button onclick="openLogin()" class="admin-trigger"><i class="fas fa-shield-halved"></i> Tizimga kirish</button>
         </div>
     </nav>
 
     <header class="hero">
         <div class="container">
-            <h1>Aqlli <span>Ijara</span> Portali</h1>
-            <p>Ixtisoslashtirilgan maktablar uchun Windows 11 Fluent dizaynidagi platforma.</p>
-            <a href="#main-grid" class="btn btn-primary"><i class="fas fa-layer-group"></i> E'lonlarni ko'rish</a>
+            <h1>Ijtimoiy <span>Raqamli Monitoring</span> Portali</h1>
+            <p>Ta'lim muassasasi xodimlari va o'quvchilari uchun yaratilgan maxsus axborot-almashinuv tizimi. Loyiha "NetGlobal Team" tomonidan ishlab chiqilgan.</p>
+            <a href="#main-grid" class="btn btn-main"><i class="fas fa-list-check"></i> Mavjud ma'lumotlar</a>
         </div>
     </header>
 
@@ -149,45 +149,44 @@
     </main>
 
     <div id="login-modal" class="modal">
-        <div class="modal-content" style="max-width: 400px; text-align: center;">
-            <i class="fas fa-user-lock fa-3x" style="color: var(--primary); margin-bottom: 20px;"></i>
-            <h3>Admin Boshqaruvi</h3><br>
-            <input type="text" id="adm-u" class="input-win" placeholder="Admin Login">
-            <input type="password" id="adm-p" class="input-win" placeholder="Parol">
-            <button onclick="handleLogin()" class="btn btn-primary" style="width:100%">Kirish</button>
-            <button onclick="closeModals()" class="btn" style="color: white; margin-top: 15px; background: none;">Yopish</button>
+        <div class="modal-content" style="max-width: 380px; text-align: center;">
+            <h3 style="margin-bottom: 20px;">Tizim administrator burchagi</h3>
+            <input type="text" id="adm-u" class="input-field" placeholder="Identifikator">
+            <input type="password" id="adm-p" class="input-field" placeholder="Maxfiy kod">
+            <button onclick="handleLogin()" class="btn btn-main" style="width:100%">Tizimga kirish</button>
+            <button onclick="closeModals()" style="background:none; border:none; color:gray; margin-top:15px; cursor:pointer;">Yopish</button>
         </div>
     </div>
 
     <div id="admin-panel" class="modal">
         <div class="modal-content">
-            <h2 style="margin-bottom: 25px;"><i class="fas fa-plus-circle"></i> Yangi e'lon qo'shish</h2>
+            <h2 style="margin-bottom: 20px;"><i class="fas fa-file-circle-plus"></i> Yangi ma'lumot joylash</h2>
             
-            <input type="text" id="p-title" class="input-win" placeholder="E'lon sarlavhasi (masalan: 2 xonali uy ijaraga beriladi)">
+            <input type="text" id="p-title" class="input-field" placeholder="Mavzu yoki Sarlavha">
             
-            <label style="display: block; margin-bottom: 10px; opacity: 0.8;">Batafsil ma'lumot (Wikipedia uslubida):</label>
+            <label style="font-size: 0.9rem; margin-bottom: 8px; display: block; opacity: 0.7;">Batafsil tavsif:</label>
             <textarea id="p-desc"></textarea>
 
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
-                <input type="text" id="p-phone" class="input-win" placeholder="Telefon raqam (masalan: +998 90 ...)">
-                <input type="text" id="p-tg" class="input-win" placeholder="Telegram username (masalan: @username)">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                <input type="text" id="p-phone" class="input-field" placeholder="Aloqa uchun (Tel)">
+                <input type="text" id="p-tg" class="input-field" placeholder="Telegram manzili">
             </div>
 
-            <div id="map-picker" style="height: 200px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--glass-border);"></div>
+            <div id="map-picker" style="height: 180px; border-radius: 10px; margin-bottom: 15px; border: 1px solid var(--border);"></div>
             
-            <label>Rasm yuklash:</label><br>
-            <input type="file" id="p-img" style="margin: 15px 0;"><br>
+            <label style="font-size: 0.9rem; opacity: 0.7;">Vizual rasm (ixtiyoriy):</label>
+            <input type="file" id="p-img" style="margin: 10px 0; color: white; font-size: 0.8rem;">
 
-            <div style="display: flex; gap: 10px;">
-                <button onclick="saveData()" class="btn btn-primary" style="flex: 2;">E'lonni saytga chiqarish</button>
-                <button onclick="closeModals()" class="btn" style="background: #ef4444; color: white; flex: 1;">Bekor qilish</button>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button onclick="saveData()" class="btn btn-main" style="flex: 2;">Tasdiqlash va chop etish</button>
+                <button onclick="closeModals()" class="btn" style="background: #334155; color: white; flex: 1;">Bekor qilish</button>
             </div>
         </div>
     </div>
 
     <footer>
-        <p>© 2026 Mingbuloq IM Portal | NetGlobal Team</p>
-        <p style="margin-top: 10px; font-weight: 600; color: var(--primary);">Solijon, Ulug'bek, Dilmurod</p>
+        <p>© 2026 Mingbuloq tumani ixtisoslashtirilgan maktabi</p>
+        <p style="font-size: 0.8rem; margin-top: 10px;">Dasturiy ta'minot: <strong>NetGlobal Team</strong> (S.Muhammadkarimov, U.Shuxratullayev, D.Abduvaxobov)</p>
     </footer>
 
     <script>
@@ -203,9 +202,8 @@
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
 
-        let admin = JSON.parse(localStorage.getItem('adm')) || {u: "mystra", p: "mystra2014"};
+        let adminAcc = JSON.parse(localStorage.getItem('adm')) || {u: "mystra", p: "mystra2014"};
 
-        // Wikipedia editorini yoqish
         $('#p-desc').trumbowyg();
 
         function openLogin() { document.getElementById('login-modal').style.display = 'flex'; }
@@ -214,11 +212,11 @@
         function handleLogin() {
             const u = document.getElementById('adm-u').value;
             const p = document.getElementById('adm-p').value;
-            if(u === admin.u && p === admin.p) {
+            if(u === adminAcc.u && p === adminAcc.p) {
                 document.getElementById('login-modal').style.display='none';
                 document.getElementById('admin-panel').style.display='flex';
                 initMap();
-            } else alert("Xato login yoki parol!");
+            } else alert("Identifikatsiya xatosi!");
         }
 
         let map, marker;
@@ -239,7 +237,7 @@
             const tg = document.getElementById('p-tg').value;
             const img = document.getElementById('p-img').files[0];
 
-            if(!t || !ph) return alert("Sarlavha va telefon raqam shart!");
+            if(!t || !ph) return alert("Barcha maydonlarni to'ldiring!");
 
             let b64 = "";
             if(img) {
@@ -254,7 +252,7 @@
                 title: t, desc: d, phone: ph, telegram: tg,
                 image: b64, time: new Date()
             });
-            alert("E'lon muvaffaqiyatli qo'shildi!");
+            alert("Ma'lumot tizimga muvaffaqiyatli kiritildi!");
             location.reload();
         }
 
@@ -266,13 +264,13 @@
                     const data = doc.data();
                     grid.innerHTML += `
                         <div class="card">
-                            <img src="${data.image || 'https://via.placeholder.com/400x250/1e1b4b/ffffff?text=Rasm+yoq'}" class="card-img">
+                            <img src="${data.image || 'https://via.placeholder.com/400x210/0f172a/ffffff?text=Tasvir+mavjud+emas'}" class="card-img">
                             <div class="card-body">
-                                <h3 style="margin-bottom:10px">${data.title}</h3>
-                                <div style="font-size:0.9rem; opacity:0.8; height:60px; overflow:hidden;">${data.desc}</div>
-                                <div class="contact-badge">
-                                    <i class="fas fa-phone"></i> ${data.phone}
-                                    ${data.telegram ? ` | <i class="fab fa-telegram"></i> ${data.telegram}` : ''}
+                                <h3 style="font-size:1.1rem; margin-bottom:10px">${data.title}</h3>
+                                <div style="font-size:0.85rem; opacity:0.7; max-height:80px; overflow:hidden;">${data.desc}</div>
+                                <div class="contact-info">
+                                    <span class="badge"><i class="fas fa-phone"></i> ${data.phone}</span>
+                                    ${data.telegram ? `<span class="badge" style="background:#334155"><i class="fab fa-telegram"></i> ${data.telegram}</span>` : ''}
                                 </div>
                             </div>
                         </div>`;
