@@ -3,65 +3,288 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mingbuloq tumani IM | Raqamli Boshqaruv Portali</title>
+    <title>Mingbuloq tumani IM | Raqamli Axborot Portali</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.26.0/ui/trumbowyg.min.css">
 
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
     
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.26.0/trumbowyg.min.js"></script>
 
     <style>
         :root {
-            --bg-main: radial-gradient(circle at top right, #1e1b4b, #020617);
+            /* Siz tanlagan ko'k va binafsha gradient */
+            --bg-gradient: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #4c1d95 100%);
             --accent: #6366f1;
-            --danger: #ef4444;
-            --glass: rgba(255, 255, 255, 0.03);
-            --border: rgba(255, 255, 255, 0.1);
-            --text: #f1f5f9;
+            --glass: rgba(255, 255, 255, 0.08);
+            --border: rgba(255, 255, 255, 0.15);
+            --text: #f8fafc;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
-        body { background: var(--bg-main); background-attachment: fixed; color: var(--text); min-height: 100vh; line-height: 1.6; }
+        
+        body { 
+            background: var(--bg-gradient); 
+            background-attachment: fixed;
+            color: var(--text); 
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
         .container { width: 92%; max-width: 1200px; margin: auto; }
 
-        /* --- NAVBAR --- */
+        /* --- NAVIGATSIYA --- */
         .navbar {
             position: sticky; top: 15px; z-index: 1000;
-            backdrop-filter: blur(20px); background: rgba(15, 23, 42, 0.8);
-            border: 1px solid var(--border); border-radius: 12px;
-            padding: 12px 25px; margin: 15px auto; display: flex; justify-content: space-between; align-items: center;
+            backdrop-filter: blur(25px); 
+            background: rgba(15, 23, 42, 0.7);
+            border: 1px solid var(--border); 
+            border-radius: 14px;
+            padding: 10px 25px; margin: 15px auto; width: 95%;
+            display: flex; justify-content: space-between; align-items: center;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.4);
         }
-        .logo-box { display: flex; align-items: center; gap: 12px; }
-        .circle-img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--accent); background: white; }
-        .nav-title { font-size: 1rem; font-weight: 700; }
-        .nav-title span { display: block; font-size: 0.7rem; font-weight: 400; opacity: 0.6; }
-
-        /* --- BUTTONS --- */
-        .btn { padding: 10px 20px; border-radius: 8px; font-weight: 600; cursor: pointer; border: none; transition: 0.2s; display: inline-flex; align-items: center; gap: 8px; text-decoration: none; color: white; }
-        .btn-primary { background: var(--accent); }
-        .btn-danger { background: var(--danger); padding: 6px 12px; font-size: 0.8rem; }
-        .btn-ghost { background: var(--glass); border: 1px solid var(--border); }
-        .btn:hover { opacity: 0.9; transform: translateY(-1px); }
-
-        /* --- GRID --- */
-        .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin: 40px 0; }
-        .card { background: var(--glass); border: 1px solid var(--border); border-radius: 16px; overflow: hidden; position: relative; }
-        .card-img { width: 100%; height: 200px; object-fit: cover; }
-        .card-body { padding: 20px; }
-        .card-tools { position: absolute; top: 10px; right: 10px; display: none; } /* Faqat admin ko'radi */
         
-        /* --- MODALS --- */
-        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(8px); }
-        .modal-content { background: #0f172a; padding: 30px; border-radius: 20px; width: 90%; max-width: 600px; border: 1px solid var(--border); }
-        .input-box { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: white; margin-bottom: 15px; }
+        .logo-group { display: flex; align-items: center; gap: 12px; }
+        .circle-logo {
+            width: 45px; height: 45px; border-radius: 50%;
+            border: 2px solid var(--accent); object-fit: cover;
+            background: white; margin-right: -15px;
+            box-shadow: 5px 0 15px rgba(0,0,0,0.3);
+        }
+        .nav-title { font-size: 1.2rem; font-weight: 700; color: white; margin-left: 20px; text-decoration: none; }
+        .nav-title span { font-size: 0.7rem; display: block; font-weight: 400; opacity: 0.8; letter-spacing: 0.5px; }
 
-        .tabs { display: flex; gap: 10px; margin-bottom: 20px; border-bottom: 1px solid var(--border); }
-        .tab-link { padding: 10px; color: gray; cursor: pointer; border-bottom: 2px solid transparent; }
-        .tab-link.active { color: var(--accent); border-bottom-color: var(--accent); font-weight: bold; }
+        .admin-login-btn {
+            background: var(--glass); border: 1px solid var(--border); color: white;
+            padding: 9px 18px; border-radius: 10px; cursor: pointer;
+            transition: 0.3s; font-size: 0.9rem; font-weight: 600;
+        }
+        .admin-login-btn:hover { background: var(--accent); border-color: var(--accent); transform: scale(1.05); }
 
-        footer { text-align: center; padding:
+        /* --- ASOSIY QISM --- */
+        .hero { padding: 80px 0 50px; text-align: center; }
+        .hero h1 { font-size: 3rem; font-weight: 800; margin-bottom: 15px; text-shadow: 0 4px 10px rgba(0,0,0,0.3); }
+        .hero h1 b { color: var(--accent); }
+        .hero p { font-size: 1.2rem; opacity: 0.85; max-width: 800px; margin: 0 auto 40px; }
+
+        /* --- MA'LUMOT KARTALARI --- */
+        .data-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-bottom: 50px; }
+        .data-card { 
+            background: var(--glass); 
+            backdrop-filter: blur(15px);
+            border-radius: 18px; border: 1px solid var(--border); 
+            overflow: hidden; transition: 0.4s;
+        }
+        .data-card:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 15px 35px rgba(0,0,0,0.4); }
+        .card-image { width: 100%; height: 220px; object-fit: cover; }
+        .card-content { padding: 22px; }
+        .card-contact { 
+            display: flex; flex-wrap: wrap; gap: 10px; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border);
+        }
+        .contact-tag { background: rgba(99, 102, 241, 0.2); padding: 5px 12px; border-radius: 8px; font-size: 0.8rem; color: #a5b4fc; }
+
+        /* --- MODAL OYNALAR --- */
+        .modal-overlay {
+            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.85); z-index: 2000; justify-content: center; align-items: center;
+            backdrop-filter: blur(12px);
+        }
+        .modal-body {
+            background: #1e1b4b; padding: 35px; border-radius: 20px;
+            width: 90%; max-width: 800px; border: 1px solid var(--border);
+            max-height: 90vh; overflow-y: auto;
+        }
+        .form-input { 
+            width: 100%; padding: 13px; border-radius: 10px; border: 1px solid var(--border); 
+            background: rgba(255,255,255,0.05); color: white; margin-bottom: 18px; font-size: 1rem;
+        }
+        
+        /* Muharrir dizayni */
+        .trumbowyg-box { border-radius: 10px; margin-bottom: 18px; border: none !important; }
+        .trumbowyg-editor { background: #f1f5f9 !important; color: #1e293b !important; }
+
+        footer { padding: 60px 0; text-align: center; border-top: 1px solid var(--border); opacity: 0.7; }
+
+        .btn-submit { background: var(--accent); color: white; padding: 14px 30px; border-radius: 10px; font-weight: 700; border: none; cursor: pointer; transition: 0.3s; }
+        .btn-submit:hover { background: #4f46e5; box-shadow: 0 5px 20px rgba(99, 102, 241, 0.4); }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo-group">
+            <div style="display: flex;">
+                <img src="https://i.ibb.co/vz6W7M2/netglobal-logo.png" class="circle-logo">
+                <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqYF7lOa6xR5mG7p5Zp9zQ" class="circle-logo">
+            </div>
+            <a href="#" class="nav-title">
+                Mingbuloq tumani IM
+                <span>RAQAMLI MONITORING TIZIMI</span>
+            </a>
+        </div>
+        <div class="nav-right">
+            <button onclick="openAuth()" class="admin-login-btn"><i class="fas fa-fingerprint"></i> Tizimga kirish</button>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="container">
+            <h1>Ijtimoiy <b>Monitoring</b> Portali</h1>
+            <p>Ixtisoslashtirilgan ta'lim muassasalari agentligi tizimidagi maktablar uchun yaratilgan maxsus axborot almashinuvi loyihasi.</p>
+            <a href="#data-grid" class="btn-submit" style="text-decoration: none;"><i class="fas fa-chevron-down"></i> Ma'lumotlarni ko'rish</a>
+        </div>
+    </header>
+
+    <main class="container">
+        <div class="data-grid" id="data-grid">
+            </div>
+    </main>
+
+    <div id="auth-modal" class="modal-overlay">
+        <div class="modal-body" style="max-width: 380px; text-align: center;">
+            <i class="fas fa-shield-halved fa-3x" style="color: var(--accent); margin-bottom: 20px;"></i>
+            <h3 style="margin-bottom: 20px;">Identifikatsiya</h3>
+            <input type="text" id="login-u" class="form-input" placeholder="Login">
+            <input type="password" id="login-p" class="form-input" placeholder="Parol">
+            <button onclick="checkAuth()" class="btn-submit" style="width: 100%;">Kirish</button>
+            <button onclick="closeModals()" style="background:none; border:none; color:gray; margin-top:15px; cursor:pointer;">Yopish</button>
+        </div>
+    </div>
+
+    <div id="dashboard-modal" class="modal-overlay">
+        <div class="modal-body">
+            <h2 style="margin-bottom: 25px;"><i class="fas fa-edit"></i> Ma'lumot qo'shish</h2>
+            
+            <input type="text" id="p-title" class="form-input" placeholder="Sarlavha yoki Mavzu">
+            
+            <label style="display:block; margin-bottom:10px; font-size:0.9rem; opacity:0.8;">Batafsil ma'lumot (Wikipedia uslubida):</label>
+            <textarea id="p-desc"></textarea>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                <input type="text" id="p-phone" class="form-input" placeholder="Telefon raqami">
+                <input type="text" id="p-tg" class="form-input" placeholder="Telegram username">
+            </div>
+
+            <div id="map-picker" style="height: 180px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border);"></div>
+            
+            <label style="font-size:0.9rem;">Rasm yuklash:</label>
+            <input type="file" id="p-img" style="margin: 10px 0; color: white; display:block;">
+
+            <div style="display: flex; gap: 15px; margin-top: 25px;">
+                <button onclick="saveEntry()" class="btn-submit" style="flex: 2;">Tizimga joylash</button>
+                <button onclick="closeModals()" class="btn-submit" style="background: #334155; flex: 1;">Bekor qilish</button>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="container">
+            <p>© 2026 Mingbuloq tumani ixtisoslashtirilgan maktabi</p>
+            <p style="margin-top: 10px; font-size: 0.8rem; letter-spacing: 1px;">
+                DASTURIY TA'MINOT: <strong>NETGLOBAL TEAM</strong> (S.MUHAMMADKARIMOV, U.SHUXRATULLAYEV, D.ABDUVAXOBOV)
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        // --- KONFIGURATSIYA ---
+        const firebaseConfig = {
+            apiKey: "AIzaSy...", 
+            authDomain: "mingbulak-ijara.firebaseapp.com",
+            projectId: "mingbulak-ijara",
+            storageBucket: "mingbulak-ijara.appspot.com",
+            messagingSenderId: "999036185534",
+            appId: "1:999036185534:web:112a51eb1dcf76c685a7ef"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        let adminKey = JSON.parse(localStorage.getItem('adm')) || {u: "mystra", p: "mystra2014"};
+
+        // Editor init
+        $('#p-desc').trumbowyg();
+
+        function openAuth() { document.getElementById('auth-modal').style.display = 'flex'; }
+        function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display='none'); }
+
+        function checkAuth() {
+            const u = document.getElementById('login-u').value;
+            const p = document.getElementById('login-p').value;
+            if(u === adminKey.u && p === adminKey.p) {
+                document.getElementById('auth-modal').style.display='none';
+                document.getElementById('dashboard-modal').style.display='flex';
+                initMap();
+            } else alert("Ruxsat berilmadi!");
+        }
+
+        let map, marker;
+        function initMap() {
+            if(map) return;
+            map = L.map('map-picker').setView([40.93, 71.33], 13);
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+            map.on('click', e => {
+                if(marker) marker.setLatLng(e.latlng);
+                else marker = L.marker(e.latlng).addTo(map);
+            });
+        }
+
+        async function saveEntry() {
+            const t = document.getElementById('p-title').value;
+            const d = $('#p-desc').trumbowyg('html');
+            const ph = document.getElementById('p-phone').value;
+            const tg = document.getElementById('p-tg').value;
+            const img = document.getElementById('p-img').files[0];
+
+            if(!t || !ph) return alert("Sarlavha va telefon majburiy!");
+
+            let b64 = "";
+            if(img) {
+                b64 = await new Promise(r => {
+                    const reader = new FileReader();
+                    reader.onload = e => r(e.target.result);
+                    reader.readAsDataURL(img);
+                });
+            }
+
+            await db.collection("posts").add({
+                title: t, desc: d, phone: ph, telegram: tg,
+                image: b64, date: new Date()
+            });
+            alert("Ma'lumot saqlandi!");
+            location.reload();
+        }
+
+        function loadData() {
+            db.collection("posts").orderBy("date", "desc").onSnapshot(snap => {
+                const grid = document.getElementById('data-grid');
+                grid.innerHTML = "";
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    grid.innerHTML += `
+                        <div class="data-card">
+                            <img src="${data.image || 'https://via.placeholder.com/400x220/1e1b4b/ffffff?text=Tasvir+mavjud+emas'}" class="card-image">
+                            <div class="card-content">
+                                <h3 style="margin-bottom:10px">${data.title}</h3>
+                                <div style="font-size:0.85rem; opacity:0.8; max-height:70px; overflow:hidden;">${data.desc}</div>
+                                <div class="card-contact">
+                                    <span class="contact-tag"><i class="fas fa-phone"></i> ${data.phone}</span>
+                                    ${data.telegram ? `<span class="contact-tag"><i class="fab fa-telegram"></i> ${data.telegram}</span>` : ''}
+                                </div>
+                            </div>
+                        </div>`;
+                });
+            });
+        }
+        window.onload = loadData;
+    </script>
+</body>
+    </html>
+    
