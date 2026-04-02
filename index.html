@@ -130,74 +130,175 @@
                 <span>RAQAMLI MONITORING TIZIMI</span>
             </a>
         </div>
-        <div class="nav-right">
-            <button onclick="openAuth()" class="admin-login-btn"><i class="fas fa-fingerprint"></i> Tizimga kirish</button>
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mingbuloq tumani IM | Rasmiy Monitoring Portali</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.26.0/ui/trumbowyg.min.css">
+
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore-compat.js"></script>
+    
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Trumbowyg/2.26.0/trumbowyg.min.js"></script>
+
+    <style>
+        :root {
+            --bg: linear-gradient(135deg, #020617 0%, #1e1b4b 50%, #4c1d95 100%);
+            --accent: #6366f1;
+            --glass: rgba(255, 255, 255, 0.05);
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #f8fafc;
+            --success: #22c55e;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; scroll-behavior: smooth; }
+        body { background: var(--bg); color: var(--text); background-attachment: fixed; min-height: 100vh; }
+
+        /* --- NAVIGATION --- */
+        .navbar {
+            position: sticky; top: 10px; z-index: 1000;
+            background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(20px);
+            border: 1px solid var(--border); border-radius: 15px;
+            padding: 12px 25px; margin: 10px auto; width: 95%;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        .logo-box { display: flex; align-items: center; gap: 10px; }
+        .circle-img { width: 42px; height: 42px; border-radius: 50%; border: 2px solid var(--accent); background: #fff; margin-right: -15px; }
+        .brand { margin-left: 20px; text-decoration: none; color: white; font-weight: 700; font-size: 1.1rem; }
+        .brand span { display: block; font-size: 0.65rem; font-weight: 400; opacity: 0.6; text-transform: uppercase; }
+
+        .nav-actions { display: flex; gap: 15px; align-items: center; }
+        .btn-icon { background: var(--glass); border: 1px solid var(--border); color: white; padding: 10px 15px; border-radius: 10px; cursor: pointer; transition: 0.3s; }
+        .btn-icon:hover { background: var(--accent); }
+
+        /* --- HERO --- */
+        .hero { padding: 80px 0 40px; text-align: center; }
+        .hero h1 { font-size: 3.2rem; font-weight: 800; margin-bottom: 20px; }
+        .hero h1 b { color: var(--accent); }
+        .hero p { max-width: 700px; margin: 0 auto 30px; opacity: 0.8; font-size: 1.1rem; }
+
+        /* --- CARDS --- */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; padding-bottom: 50px; }
+        .card { 
+            background: var(--glass); border: 1px solid var(--border); border-radius: 20px; 
+            overflow: hidden; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); backdrop-filter: blur(10px);
+        }
+        .card:hover { transform: translateY(-10px); border-color: var(--accent); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
+        .card-img { width: 100%; height: 200px; object-fit: cover; }
+        .card-body { padding: 20px; }
+        .status-badge { font-size: 0.7rem; padding: 3px 8px; border-radius: 5px; background: var(--success); color: white; margin-bottom: 10px; display: inline-block; }
+        .card-meta { display: flex; gap: 10px; margin-top: 15px; font-size: 0.85rem; color: #a5b4fc; border-top: 1px solid var(--border); padding-top: 15px; }
+
+        /* --- MODALS --- */
+        .modal { 
+            display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.9); 
+            z-index: 2000; justify-content: center; align-items: center; backdrop-filter: blur(15px);
+        }
+        .modal-content { 
+            background: #0f172a; width: 90%; max-width: 800px; padding: 40px; 
+            border-radius: 25px; border: 1px solid var(--border); max-height: 90vh; overflow-y: auto;
+        }
+        .input-group { width: 100%; padding: 14px; border-radius: 12px; border: 1px solid var(--border); background: rgba(255,255,255,0.05); color: white; margin-bottom: 15px; outline: none; }
+        .input-group:focus { border-color: var(--accent); }
+
+        .trumbowyg-box { border-radius: 12px; margin-bottom: 15px; }
+        .trumbowyg-editor { background: white !important; color: #333 !important; }
+
+        /* --- ADMIN BADGE --- */
+        #admin-controls { display: none; margin-bottom: 20px; padding: 15px; background: rgba(99, 102, 241, 0.1); border-radius: 12px; }
+
+        footer { text-align: center; padding: 40px; border-top: 1px solid var(--border); opacity: 0.5; font-size: 0.8rem; }
+
+        .btn-main { background: var(--accent); color: white; border: none; padding: 12px 25px; border-radius: 12px; font-weight: 700; cursor: pointer; transition: 0.3s; }
+        .btn-main:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(99, 102, 241, 0.4); }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo-box">
+            <img src="https://i.ibb.co/vz6W7M2/netglobal-logo.png" class="circle-img">
+            <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSqYF7lOa6xR5mG7p5Zp9zQ" class="circle-img">
+            <a href="#" class="brand">Mingbuloq IM <span>Raqamli Axborot Tizimi</span></a>
+        </div>
+        <div class="nav-actions">
+            <button id="auth-btn" onclick="toggleAuthModal()" class="btn-icon"><i class="fas fa-user-shield"></i> Kirish</button>
+            <button id="logout-btn" onclick="handleLogout()" class="btn-icon" style="display:none;"><i class="fas fa-sign-out-alt"></i> Chiqish</button>
         </div>
     </nav>
 
     <header class="hero">
         <div class="container">
             <h1>Ijtimoiy <b>Monitoring</b> Portali</h1>
-            <p>Ixtisoslashtirilgan ta'lim muassasalari agentligi tizimidagi maktablar uchun yaratilgan maxsus axborot almashinuvi loyihasi.</p>
-            <a href="#data-grid" class="btn-submit" style="text-decoration: none;"><i class="fas fa-chevron-down"></i> Ma'lumotlarni ko'rish</a>
+            <p>NetGlobal Team tomonidan ta'lim muassasasi uchun maxsus ishlab chiqilgan xavfsiz va ishonchli monitoring platformasi.</p>
+            <button onclick="openPostModal()" class="btn-main"><i class="fas fa-plus"></i> Yangi e'lon berish</button>
         </div>
     </header>
 
     <main class="container">
-        <div class="data-grid" id="data-grid">
+        <div id="admin-controls">
+            <h4><i class="fas fa-tasks"></i> Admin boshqaruvi: Kutilayotgan e'lonlar</h4>
+            <div id="pending-list"></div>
+        </div>
+        
+        <div class="grid" id="main-grid">
             </div>
     </main>
 
-    <div id="auth-modal" class="modal-overlay">
-        <div class="modal-body" style="max-width: 380px; text-align: center;">
-            <i class="fas fa-shield-halved fa-3x" style="color: var(--accent); margin-bottom: 20px;"></i>
-            <h3 style="margin-bottom: 20px;">Identifikatsiya</h3>
-            <input type="text" id="login-u" class="form-input" placeholder="Login">
-            <input type="password" id="login-p" class="form-input" placeholder="Parol">
-            <button onclick="checkAuth()" class="btn-submit" style="width: 100%;">Kirish</button>
-            <button onclick="closeModals()" style="background:none; border:none; color:gray; margin-top:15px; cursor:pointer;">Yopish</button>
+    <div id="auth-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <h2 style="margin-bottom: 25px;">Tizimga kirish</h2>
+            <input type="email" id="email" class="input-group" placeholder="Elektron pochta">
+            <div style="position: relative;">
+                <input type="password" id="password" class="input-group" placeholder="Parol">
+                <i class="fas fa-eye" style="position: absolute; right: 15px; top: 15px; cursor: pointer; opacity: 0.5;" onclick="togglePass()"></i>
+            </div>
+            <button onclick="handleLogin()" class="btn-main" style="width: 100%;">Kirish</button>
+            <p style="margin-top: 15px; font-size: 0.8rem; opacity: 0.5;">Faqat ro'yxatdan o'tgan xodimlar uchun</p>
+            <button onclick="toggleAuthModal()" style="background:none; border:none; color:gray; margin-top:20px; cursor:pointer;">Yopish</button>
         </div>
     </div>
 
-    <div id="dashboard-modal" class="modal-overlay">
-        <div class="modal-body">
-            <h2 style="margin-bottom: 25px;"><i class="fas fa-edit"></i> Ma'lumot qo'shish</h2>
-            
-            <input type="text" id="p-title" class="form-input" placeholder="Sarlavha yoki Mavzu">
-            
-            <label style="display:block; margin-bottom:10px; font-size:0.9rem; opacity:0.8;">Batafsil ma'lumot (Wikipedia uslubida):</label>
+    <div id="post-modal" class="modal">
+        <div class="modal-content">
+            <h2 style="margin-bottom: 25px;"><i class="fas fa-pen-nib"></i> Ma'lumot tayyorlash</h2>
+            <input type="text" id="p-title" class="input-group" placeholder="Sarlavha">
             <textarea id="p-desc"></textarea>
-
+            
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
-                <input type="text" id="p-phone" class="form-input" placeholder="Telefon raqami">
-                <input type="text" id="p-tg" class="form-input" placeholder="Telegram username">
+                <input type="text" id="p-phone" class="input-group" placeholder="Tel: +998 (__) ___ __ __">
+                <input type="text" id="p-tg" class="input-group" placeholder="Telegram: @username">
             </div>
 
-            <div id="map-picker" style="height: 180px; border-radius: 12px; margin-bottom: 20px; border: 1px solid var(--border);"></div>
+            <div id="map-picker" style="height: 180px; border-radius: 15px; margin-bottom: 15px; border: 1px solid var(--border);"></div>
             
-            <label style="font-size:0.9rem;">Rasm yuklash:</label>
-            <input type="file" id="p-img" style="margin: 10px 0; color: white; display:block;">
+            <label style="font-size: 0.8rem; opacity: 0.7;">Hujjat yoki rasm:</label>
+            <input type="file" id="p-img" style="margin: 10px 0; color: white;">
 
-            <div style="display: flex; gap: 15px; margin-top: 25px;">
-                <button onclick="saveEntry()" class="btn-submit" style="flex: 2;">Tizimga joylash</button>
-                <button onclick="closeModals()" class="btn-submit" style="background: #334155; flex: 1;">Bekor qilish</button>
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button onclick="submitPost()" class="btn-main" style="flex: 2;">Tekshirishga yuborish</button>
+                <button onclick="closePostModal()" class="btn-main" style="background: #334155; flex: 1;">Bekor qilish</button>
             </div>
         </div>
     </div>
 
     <footer>
-        <div class="container">
-            <p>© 2026 Mingbuloq tumani ixtisoslashtirilgan maktabi</p>
-            <p style="margin-top: 10px; font-size: 0.8rem; letter-spacing: 1px;">
-                DASTURIY TA'MINOT: <strong>NETGLOBAL TEAM</strong> (S.MUHAMMADKARIMOV, U.SHUXRATULLAYEV, D.ABDUVAXOBOV)
-            </p>
-        </div>
+        <p>© 2026 Mingbuloq tumani IM | Loyiha muallifi: NetGlobal Team</p>
     </footer>
 
     <script>
-        // --- KONFIGURATSIYA ---
+        // --- FIREBASE KONFIGURATSIYASI ---
         const firebaseConfig = {
-            apiKey: "AIzaSy...", 
+            apiKey: "AIzaSy...", // BU YERGA O'ZINGIZNING API KEYINGIZNI QO'YING
             authDomain: "mingbulak-ijara.firebaseapp.com",
             projectId: "mingbulak-ijara",
             storageBucket: "mingbulak-ijara.appspot.com",
@@ -205,26 +306,48 @@
             appId: "1:999036185534:web:112a51eb1dcf76c685a7ef"
         };
         firebase.initializeApp(firebaseConfig);
+        const auth = firebase.auth();
         const db = firebase.firestore();
 
-        let adminKey = JSON.parse(localStorage.getItem('adm')) || {u: "mystra", p: "mystra2014"};
-
-        // Editor init
+        // Wikipedia Style Editor
         $('#p-desc').trumbowyg();
 
-        function openAuth() { document.getElementById('auth-modal').style.display = 'flex'; }
-        function closeModals() { document.querySelectorAll('.modal-overlay').forEach(m => m.style.display='none'); }
-
-        function checkAuth() {
-            const u = document.getElementById('login-u').value;
-            const p = document.getElementById('login-p').value;
-            if(u === adminKey.u && p === adminKey.p) {
-                document.getElementById('auth-modal').style.display='none';
-                document.getElementById('dashboard-modal').style.display='flex';
-                initMap();
-            } else alert("Ruxsat berilmadi!");
+        // --- AUTH FUNKSIYALARI ---
+        function toggleAuthModal() { $('#auth-modal').fadeToggle('fast').css('display', 'flex'); }
+        function closePostModal() { $('#post-modal').fadeOut(); }
+        function openPostModal() { $('#post-modal').fadeIn().css('display', 'flex'); initMap(); }
+        
+        function togglePass() {
+            const p = document.getElementById('password');
+            p.type = p.type === 'password' ? 'text' : 'password';
         }
 
+        async function handleLogin() {
+            const e = $('#email').val();
+            const p = $('#password').val();
+            try {
+                await auth.signInWithEmailAndPassword(e, p);
+                toggleAuthModal();
+            } catch (err) { alert("Kirishda xatolik: " + err.message); }
+        }
+
+        function handleLogout() { auth.signOut(); location.reload(); }
+
+        // Foydalanuvchi holatini kuzatish
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                $('#auth-btn').hide();
+                $('#logout-btn').show();
+                $('#admin-controls').show();
+                loadPendingPosts();
+            } else {
+                $('#auth-btn').show();
+                $('#logout-btn').hide();
+                $('#admin-controls').hide();
+            }
+        });
+
+        // --- MA'LUMOTLAR BILAN ISHLASH ---
         let map, marker;
         function initMap() {
             if(map) return;
@@ -236,55 +359,81 @@
             });
         }
 
-        async function saveEntry() {
-            const t = document.getElementById('p-title').value;
+        async function submitPost() {
+            const t = $('#p-title').val();
             const d = $('#p-desc').trumbowyg('html');
-            const ph = document.getElementById('p-phone').value;
-            const tg = document.getElementById('p-tg').value;
+            const ph = $('#p-phone').val();
+            const tg = $('#p-tg').val();
             const img = document.getElementById('p-img').files[0];
 
-            if(!t || !ph) return alert("Sarlavha va telefon majburiy!");
+            if(!t || !ph) return alert("Sarlavha va telefon raqami majburiy!");
 
             let b64 = "";
             if(img) {
                 b64 = await new Promise(r => {
-                    const reader = new FileReader();
-                    reader.onload = e => r(e.target.result);
-                    reader.readAsDataURL(img);
+                    const fr = new FileReader();
+                    fr.onload = e => r(e.target.result);
+                    fr.readAsDataURL(img);
                 });
             }
 
             await db.collection("posts").add({
                 title: t, desc: d, phone: ph, telegram: tg,
-                image: b64, date: new Date()
+                image: b64, status: "pending", date: new Date(),
+                author: auth.currentUser ? auth.currentUser.email : "Mehmon"
             });
-            alert("Ma'lumot saqlandi!");
-            location.reload();
+            alert("E'lon qabul qilindi va moderatsiyaga yuborildi!");
+            closePostModal();
         }
 
-        function loadData() {
-            db.collection("posts").orderBy("date", "desc").onSnapshot(snap => {
-                const grid = document.getElementById('data-grid');
-                grid.innerHTML = "";
+        // Tasdiqlanganlarni chiqarish
+        function loadApprovedPosts() {
+            db.collection("posts").where("status", "==", "approved").orderBy("date", "desc")
+            .onSnapshot(snap => {
+                const grid = $('#main-grid');
+                grid.empty();
                 snap.forEach(doc => {
                     const data = doc.data();
-                    grid.innerHTML += `
-                        <div class="data-card">
-                            <img src="${data.image || 'https://via.placeholder.com/400x220/1e1b4b/ffffff?text=Tasvir+mavjud+emas'}" class="card-image">
-                            <div class="card-content">
-                                <h3 style="margin-bottom:10px">${data.title}</h3>
-                                <div style="font-size:0.85rem; opacity:0.8; max-height:70px; overflow:hidden;">${data.desc}</div>
-                                <div class="card-contact">
-                                    <span class="contact-tag"><i class="fas fa-phone"></i> ${data.phone}</span>
-                                    ${data.telegram ? `<span class="contact-tag"><i class="fab fa-telegram"></i> ${data.telegram}</span>` : ''}
+                    grid.append(`
+                        <div class="card">
+                            <img src="${data.image || 'https://via.placeholder.com/400x200/1e1b4b/ffffff?text=Tasvir'}" class="card-img">
+                            <div class="card-body">
+                                <span class="status-badge"><i class="fas fa-check-circle"></i> Tasdiqlangan</span>
+                                <h3>${data.title}</h3>
+                                <div style="font-size:0.85rem; opacity:0.7; margin-top:10px;">${data.desc}</div>
+                                <div class="card-meta">
+                                    <span><i class="fas fa-phone"></i> ${data.phone}</span>
+                                    ${data.telegram ? `<span><i class="fab fa-telegram"></i> ${data.telegram}</span>` : ''}
                                 </div>
                             </div>
-                        </div>`;
+                        </div>`);
                 });
             });
         }
-        window.onload = loadData;
+
+        // Kutilayotganlarni admin uchun chiqarish
+        function loadPendingPosts() {
+            db.collection("posts").where("status", "==", "pending").onSnapshot(snap => {
+                const list = $('#pending-list');
+                list.empty();
+                snap.forEach(doc => {
+                    const data = doc.data();
+                    list.append(`
+                        <div style="background:var(--glass); p:10px; margin:10px 0; border-radius:10px; display:flex; justify-content:space-between; align-items:center; padding:15px; border:1px solid var(--accent);">
+                            <span><b>${data.title}</b> (${data.author})</span>
+                            <div>
+                                <button onclick="updateStatus('${doc.id}', 'approved')" class="btn-main" style="background:var(--success); padding:5px 10px; font-size:0.8rem;">Tasdiqlash</button>
+                                <button onclick="deletePost('${doc.id}')" class="btn-main" style="background:#ef4444; padding:5px 10px; font-size:0.8rem;">O'chirish</button>
+                            </div>
+                        </div>`);
+                });
+            });
+        }
+
+        async function updateStatus(id, stat) { await db.collection("posts").doc(id).update({ status: stat }); }
+        async function deletePost(id) { if(confirm("O'chirilsinmi?")) await db.collection("posts").doc(id).delete(); }
+
+        window.onload = loadApprovedPosts;
     </script>
 </body>
-    </html>
-    
+</html>
